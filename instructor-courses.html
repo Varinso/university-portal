@@ -1,160 +1,156 @@
 <!DOCTYPE html>
 <html lang="en">
- <head>
-  <meta charset="utf-8"/>
-  <meta content="width=device-width, initial-scale=1.0" name="viewport"/>
-  <title>
-   Courses | University Portal
-  </title>
-  <link href="assets/style.css" rel="stylesheet"/>
- </head>
- <body>
-  <div class="main-layout">
-   <aside class="sidebar">
-    <div class="side-head">
-     <div class="logo modern-logo">
-      UP
-     </div>
-     <h2>
-      Instructor Panel
-     </h2>
+
+<head>
+    <meta charset="utf-8" />
+    <meta content="width=device-width, initial-scale=1.0" name="viewport" />
+    <title>
+        Courses | University Portal
+    </title>
+    <link href="assets/style.css" rel="stylesheet" />
+</head>
+
+<body>
+    <div class="main-layout">
+        <aside class="sidebar">
+            <div class="side-head">
+                <div class="logo modern-logo">
+                    UP
+                </div>
+                <h2>
+                    Instructor Panel
+                </h2>
+            </div>
+            <a class="" href="instructor-dashboard.html">
+                Dashboard
+            </a>
+            <a class="" href="instructor-students.html">
+                Students
+            </a>
+            <a class="active" href="instructor-courses.html">
+                Courses
+            </a>
+            <a class="" href="instructor-create-assignment.html">
+                Create Assignment
+            </a>
+            <a class="" href="instructor-submissions.html">
+                View Submissions
+            </a>
+            <a class="" href="instructor-attendance.html">
+                Attendance
+            </a>
+            <a class="" href="instructor-announcements.html">
+                Announcements
+            </a>
+            <a class="" href="instructor-forum.html">
+                Forum
+            </a>
+            <a class="" href="instructor-reports.html">
+                Reports
+            </a>
+            <a href="index.html">
+                Logout
+            </a>
+        </aside>
+        <div class="main-area">
+            <div class="topbar">
+                <div>
+                    <h1>
+                        Courses
+                    </h1>
+                    <p>
+                        Instructor can create courses and manage class information.
+                    </p>
+                </div>
+                <div class="user-box">
+                    <span>
+                        Ms. Nabila
+                    </span>
+                    <span class="role-tag">
+                        Instructor
+                    </span>
+                </div>
+            </div>
+            <div class="card">
+                <h2>
+                    Create Course
+                </h2>
+                <div class="form-grid three">
+                    <div>
+                        <label>
+                            Course Code
+                        </label>
+                        <input placeholder="CSE-101" type="text" />
+                    </div>
+                    <div>
+                        <label>
+                            Course Title
+                        </label>
+                        <input placeholder="Web Programming" type="text" />
+                    </div>
+                    <div>
+                        <label>
+                            Section
+                        </label>
+                        <input placeholder="A" type="text" />
+                    </div>
+                    <label>
+                        Assign Instructor
+                    </label>
+                    <input placeholder="Instructor name" type="text" />
+                    <div class="btn-row">
+                        <a class="btn small-btn" href="#">
+                            Create Course
+                        </a>
+                    </div>
+                </div>
+                <div class="card">
+                    <h2>
+                        My Course List
+                    </h2>
+                    <div class="table-wrap">
+                        <table>
+                            <tr>
+                                <th>
+                                    Course
+                                </th>
+                                <th>
+                                    Semester
+                                </th>
+                                <th>
+                                    Students
+                                </th>
+                            </tr>
+                            <tr>
+                                <td>
+                                    Web Programming
+                                </td>
+                                <td>
+                                    Fall 2026
+                                </td>
+                                <td>
+                                    42
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>
+                                    Database Systems
+                                </td>
+                                <td>
+                                    Fall 2026
+                                </td>
+                                <td>
+                                    38
+                                </td>
+                            </tr>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <script src="assets/app.js">
+        </script>
     </div>
-    <a class="" href="instructor-dashboard.html">
-     Dashboard
-    </a>
-    <a class="" href="instructor-students.html">
-     Students
-    </a>
-    <a class="active" href="instructor-courses.html">
-     Courses
-    </a>
-    <a class="" href="instructor-create-assignment.html">
-     Create Assignment
-    </a>
-    <a class="" href="instructor-submissions.html">
-     View Submissions
-    </a>
-    <a class="" href="instructor-attendance.html">
-     Attendance
-    </a>
-    <a class="" href="instructor-announcements.html">
-     Announcements
-    </a>
-    <a class="" href="instructor-forum.html">
-     Forum
-    </a>
-    <a class="" href="instructor-reports.html">
-     Reports
-    </a>
-    <a href="index.html">
-     Logout
-    </a>
-   </aside>
-   <div class="main-area">
-    <div class="topbar">
-     <div>
-      <h1>
-       Courses
-      </h1>
-      <p>
-       Instructor can create courses and manage class information.
-      </p>
-     </div>
-     <div class="user-box">
-      <span>
-       Ms. Nabila
-      </span>
-      <span class="role-tag">
-       Instructor
-      </span>
-     </div>
-    </div>
-    <div class="card">
-     <h2>
-      Create Course
-     </h2>
-     <div class="form-grid three">
-      <div>
-       <label>
-        Course Code
-       </label>
-       <input placeholder="CSE-101" type="text"/>
-      </div>
-      <div>
-       <label>
-        Course Title
-       </label>
-       <input placeholder="Web Programming" type="text"/>
-      </div>
-      <div>
-       <label>
-        Section
-       </label>
-       <input placeholder="A" type="text"/>
-      </div>
-      <label>
-       Assign Instructor
-      </label>
-      <input placeholder="Instructor name" type="text"/>
-      <div class="btn-row">
-       <a class="btn small-btn" href="#">
-        Create Course
-       </a>
-      </div>
-     </div>
-     <div class="card">
-      <h2>
-       My Course List
-      </h2>
-      <div class="table-wrap">
-       <table>
-        <tr>
-         <th>
-          Course
-         </th>
-         <th>
-          Semester
-         </th>
-         <th>
-          Students
-         </th>
-        </tr>
-        <tr>
-         <td>
-          Web Programming
-         </td>
-         <td>
-          Fall 2026
-         </td>
-         <td>
-          42
-         </td>
-        </tr>
-        <tr>
-         <td>
-          Database Systems
-         </td>
-         <td>
-          Fall 2026
-         </td>
-         <td>
-          38
-         </td>
-        </tr>
-       </table>
-      </div>
-     </div>
-    </div>
-   </div>
-   <script src="assets/app.js">
-   </script>
-  </div>
-<<<<<<< HEAD
-  <script src="assets/app.js"></script>
 </body>
 
 </html>
-=======
- </body>
-</html>
->>>>>>> e41daee (ui update and js added)

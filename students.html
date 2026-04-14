@@ -1,182 +1,178 @@
 <!DOCTYPE html>
 <html lang="en">
- <head>
-  <meta charset="utf-8"/>
-  <meta content="width=device-width, initial-scale=1.0" name="viewport"/>
-  <title>
-   Students | University Portal
-  </title>
-  <link href="assets/style.css" rel="stylesheet"/>
- </head>
- <body>
-  <div class="main-layout">
-   <aside class="sidebar">
-    <div class="side-head">
-     <div class="logo small-logo">
-      UP
-     </div>
-     <h2>
-      Portal
-     </h2>
+
+<head>
+    <meta charset="utf-8" />
+    <meta content="width=device-width, initial-scale=1.0" name="viewport" />
+    <title>
+        Students | University Portal
+    </title>
+    <link href="assets/style.css" rel="stylesheet" />
+</head>
+
+<body>
+    <div class="main-layout">
+        <aside class="sidebar">
+            <div class="side-head">
+                <div class="logo small-logo">
+                    UP
+                </div>
+                <h2>
+                    Portal
+                </h2>
+            </div>
+            <a href="dashboard.html">
+                Dashboard
+            </a>
+            <a href="students.html">
+                Students
+            </a>
+            <a href="courses.html">
+                Courses
+            </a>
+            <a href="assignments.html">
+                Assignments
+            </a>
+            <a href="attendance.html">
+                Attendance
+            </a>
+            <a href="announcements.html">
+                Announcements
+            </a>
+            <a href="forum.html">
+                Forum
+            </a>
+            <a href="reports.html">
+                Reports
+            </a>
+            <a href="index.html">
+                Logout
+            </a>
+        </aside>
+        <div class="main-area">
+            <div class="topbar">
+                <div>
+                    <h1>
+                        Student Management
+                    </h1>
+                    <p>
+                        Register students, update profile, and search students.
+                    </p>
+                </div>
+                <div class="user-box">
+                    <span>
+                        Student Name
+                    </span>
+                    <span class="role-tag">
+                        Student
+                    </span>
+                </div>
+            </div>
+            <div class="card">
+                <h2>
+                    Register Student
+                </h2>
+                <div class="form-grid two">
+                    <div>
+                        <label>
+                            Name
+                        </label>
+                        <input placeholder="Student name" type="text" />
+                    </div>
+                    <div>
+                        <label>
+                            ID
+                        </label>
+                        <input placeholder="Student ID" type="text" />
+                    </div>
+                    <div>
+                        <label>
+                            Email
+                        </label>
+                        <input placeholder="Email" type="email" />
+                    </div>
+                    <div>
+                        <label>
+                            Department
+                        </label>
+                        <input placeholder="Department" type="text" />
+                    </div>
+                    <div class="btn-row">
+                        <a class="btn small-btn" href="#">
+                            Add Student
+                        </a>
+                    </div>
+                </div>
+                <div class="card">
+                    <h2>
+                        Student List
+                    </h2>
+                    <div class="table-wrap">
+                        <table>
+                            <tr>
+                                <th>
+                                    Name
+                                </th>
+                                <th>
+                                    ID
+                                </th>
+                                <th>
+                                    Department
+                                </th>
+                                <th>
+                                    Status
+                                </th>
+                            </tr>
+                            <tr>
+                                <td>
+                                    Joy E
+                                </td>
+                                <td>
+                                    2023001
+                                </td>
+                                <td>
+                                    CSE
+                                </td>
+                                <td>
+                                    Active
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>
+                                    Nadia Islam
+                                </td>
+                                <td>
+                                    2023002
+                                </td>
+                                <td>
+                                    BBA
+                                </td>
+                                <td>
+                                    Active
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>
+                                    Rafi Hasan
+                                </td>
+                                <td>
+                                    2023003
+                                </td>
+                                <td>
+                                    EEE
+                                </td>
+                                <td>
+                                    Active
+                                </td>
+                            </tr>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <script src="assets/app.js">
+        </script>
     </div>
-    <a href="dashboard.html">
-     Dashboard
-    </a>
-    <a href="students.html">
-     Students
-    </a>
-    <a href="courses.html">
-     Courses
-    </a>
-    <a href="assignments.html">
-     Assignments
-    </a>
-    <a href="attendance.html">
-     Attendance
-    </a>
-    <a href="announcements.html">
-     Announcements
-    </a>
-    <a href="forum.html">
-     Forum
-    </a>
-    <a href="reports.html">
-     Reports
-    </a>
-    <a href="index.html">
-     Logout
-    </a>
-   </aside>
-   <div class="main-area">
-    <div class="topbar">
-     <div>
-      <h1>
-       Student Management
-      </h1>
-      <p>
-       Register students, update profile, and search students.
-      </p>
-     </div>
-     <div class="user-box">
-      <span>
-       Student Name
-      </span>
-      <span class="role-tag">
-       Student
-      </span>
-     </div>
-    </div>
-    <div class="card">
-     <h2>
-      Register Student
-     </h2>
-     <div class="form-grid two">
-      <div>
-       <label>
-        Name
-       </label>
-       <input placeholder="Student name" type="text"/>
-      </div>
-      <div>
-       <label>
-        ID
-       </label>
-       <input placeholder="Student ID" type="text"/>
-      </div>
-      <div>
-       <label>
-        Email
-       </label>
-       <input placeholder="Email" type="email"/>
-      </div>
-      <div>
-       <label>
-        Department
-       </label>
-       <input placeholder="Department" type="text"/>
-      </div>
-      <div class="btn-row">
-       <a class="btn small-btn" href="#">
-        Add Student
-       </a>
-      </div>
-     </div>
-     <div class="card">
-      <h2>
-       Student List
-      </h2>
-      <div class="table-wrap">
-       <table>
-        <tr>
-         <th>
-          Name
-         </th>
-         <th>
-          ID
-         </th>
-         <th>
-          Department
-         </th>
-         <th>
-          Status
-         </th>
-        </tr>
-        <tr>
-         <td>
-          Joy E
-         </td>
-         <td>
-          2023001
-         </td>
-         <td>
-          CSE
-         </td>
-         <td>
-          Active
-         </td>
-        </tr>
-        <tr>
-         <td>
-          Nadia Islam
-         </td>
-         <td>
-          2023002
-         </td>
-         <td>
-          BBA
-         </td>
-         <td>
-          Active
-         </td>
-        </tr>
-        <tr>
-         <td>
-          Rafi Hasan
-         </td>
-         <td>
-          2023003
-         </td>
-         <td>
-          EEE
-         </td>
-         <td>
-          Active
-         </td>
-        </tr>
-       </table>
-      </div>
-     </div>
-    </div>
-   </div>
-   <script src="assets/app.js">
-   </script>
-  </div>
-<<<<<<< HEAD
-  <script src="assets/app.js"></script>
 </body>
 
 </html>
-=======
- </body>
-</html>
->>>>>>> e41daee (ui update and js added)

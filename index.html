@@ -1,121 +1,117 @@
 <!DOCTYPE html>
 <html lang="en">
- <head>
-  <meta charset="utf-8"/>
-  <meta content="width=device-width, initial-scale=1.0" name="viewport"/>
-  <title>
-   Login | University Portal
-  </title>
-  <link href="assets/style.css" rel="stylesheet"/>
- </head>
- <body class="auth-simple-page">
-  <main class="simple-auth-shell">
-   <div class="orb orb-orange">
-   </div>
-   <div class="orb orb-blue">
-   </div>
-   <div class="orb orb-small orb-small-orange">
-   </div>
-   <div class="orb orb-small orb-small-blue">
-   </div>
-   <section class="simple-auth-card">
-    <div class="simple-auth-logo">
-     UP
-    </div>
-<<<<<<< HEAD
-  </div>
-  <script src="assets/app.js"></script>
+
+<head>
+    <meta charset="utf-8" />
+    <meta content="width=device-width, initial-scale=1.0" name="viewport" />
+    <title>
+        Login | University Portal
+    </title>
+    <link href="assets/style.css" rel="stylesheet" />
+</head>
+
+<body class="auth-simple-page">
+    <main class="simple-auth-shell">
+        <div class="orb orb-orange">
+        </div>
+        <div class="orb orb-blue">
+        </div>
+        <div class="orb orb-small orb-small-orange">
+        </div>
+        <div class="orb orb-small orb-small-blue">
+        </div>
+        <section class="simple-auth-card">
+            <div class="simple-auth-logo">
+                UP
+            </div>
+            <div class="auth-step-panel simple-step-panel" id="role-choice-panel">
+                <div class="simple-auth-header">
+                    <h1>
+                        Welcome
+                    </h1>
+                    <p>
+                        Select how you want to sign in.
+                    </p>
+                </div>
+                <div class="simple-role-grid">
+                    <button class="role-choice-btn simple-role-btn" data-role="Student" type="button">
+                        <span class="simple-role-title">
+                            Student Login
+                        </span>
+                        <span class="simple-role-text">
+                            Courses, assignments, attendance, reports
+                        </span>
+                    </button>
+                    <button class="role-choice-btn simple-role-btn" data-role="Instructor" type="button">
+                        <span class="simple-role-title">
+                            Instructor Login
+                        </span>
+                        <span class="simple-role-text">
+                            Classes, announcements, submissions, reports
+                        </span>
+                    </button>
+                </div>
+            </div>
+            <div class="auth-step-panel simple-step-panel hidden-panel" id="login-panel">
+                <div class="simple-auth-header compact">
+                    <div class="simple-role-badge-row">
+                        <button class="simple-back-btn" id="back-to-role" type="button">
+                            ← Back
+                        </button>
+                        <span class="selected-role-pill simple-role-pill" id="selected-role-pill">
+                            Student Portal
+                        </span>
+                    </div>
+                    <h1>
+                        Login
+                    </h1>
+                    <p>
+                        Enter your account details to continue.
+                    </p>
+                </div>
+                <div class="simple-auth-form">
+                    <label class="sr-only" id="login-role-label">
+                        Student Email Address
+                    </label>
+                    <input id="login-email" placeholder="Enter your email" type="email" />
+                    <label class="sr-only" for="login-password">
+                        Password
+                    </label>
+                    <input id="login-password" placeholder="Enter your password" type="password" />
+                    <a class="btn simple-login-btn" href="#" id="login-submit">
+                        LOG IN
+                    </a>
+                </div>
+                <p class="simple-helper-text">
+                    Forgot password?
+                    <span>
+                        Reset
+                    </span>
+                </p>
+                <div class="simple-demo-box">
+                    <p>
+                        <strong>
+                            Student:
+                        </strong>
+                        student@uni.edu / 123456
+                    </p>
+                    <p>
+                        <strong>
+                            Instructor:
+                        </strong>
+                        instructor@uni.edu / 123456
+                    </p>
+                </div>
+            </div>
+            <p class="footer-text simple-footer-text">
+                Do not have an account?
+                <a href="register.html">
+                    Create new account
+                </a>
+            </p>
+        </section>
+    </main>
+    <script src="assets/app.js"></script>
 </body>
-=======
-    <div class="auth-step-panel simple-step-panel" id="role-choice-panel">
-     <div class="simple-auth-header">
-      <h1>
-       Welcome
-      </h1>
-      <p>
-       Select how you want to sign in.
-      </p>
-     </div>
-     <div class="simple-role-grid">
-      <button class="role-choice-btn simple-role-btn" data-role="Student" type="button">
-       <span class="simple-role-title">
-        Student Login
-       </span>
-       <span class="simple-role-text">
-        Courses, assignments, attendance, reports
-       </span>
-      </button>
-      <button class="role-choice-btn simple-role-btn" data-role="Instructor" type="button">
-       <span class="simple-role-title">
-        Instructor Login
-       </span>
-       <span class="simple-role-text">
-        Classes, announcements, submissions, reports
-       </span>
-      </button>
-     </div>
-    </div>
-    <div class="auth-step-panel simple-step-panel hidden-panel" id="login-panel">
-     <div class="simple-auth-header compact">
-      <div class="simple-role-badge-row">
-       <button class="simple-back-btn" id="back-to-role" type="button">
-        ← Back
-       </button>
-       <span class="selected-role-pill simple-role-pill" id="selected-role-pill">
-        Student Portal
-       </span>
-      </div>
-      <h1>
-       Login
-      </h1>
-      <p>
-       Enter your account details to continue.
-      </p>
-     </div>
-     <div class="simple-auth-form">
-      <label class="sr-only" id="login-role-label">
-       Student Email Address
-      </label>
-      <input id="login-email" placeholder="Enter your email" type="email"/>
-      <label class="sr-only" for="login-password">
-       Password
-      </label>
-      <input id="login-password" placeholder="Enter your password" type="password"/>
-      <a class="btn simple-login-btn" href="#" id="login-submit">
-       LOG IN
-      </a>
-     </div>
-     <p class="simple-helper-text">
-      Forgot password?
-      <span>
-       Reset
-      </span>
-     </p>
-     <div class="simple-demo-box">
-      <p>
-       <strong>
-        Student:
-       </strong>
-       student@uni.edu / 123456
-      </p>
-      <p>
-       <strong>
-        Instructor:
-       </strong>
-       instructor@uni.edu / 123456
-      </p>
-     </div>
-    </div>
-    <p class="footer-text simple-footer-text">
-     Do not have an account?
-     <a href="register.html">
-      Create new account
-     </a>
-    </p>
-   </section>
-  </main>
-  <script src="assets/app.js">
-  </script>
- </body>
->>>>>>> e41daee (ui update and js added)
+
 </html>

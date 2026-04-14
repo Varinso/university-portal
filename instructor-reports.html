@@ -1,473 +1,467 @@
 <!DOCTYPE html>
 <html lang="en">
- <head>
-  <meta charset="utf-8"/>
-  <meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+
+<head>
+  <meta charset="utf-8" />
+  <meta content="width=device-width, initial-scale=1.0" name="viewport" />
   <title>
-   Reports | University Portal
+    Reports | University Portal
   </title>
-  <link href="assets/style.css" rel="stylesheet"/>
- </head>
- <body>
+  <link href="assets/style.css" rel="stylesheet" />
+</head>
+
+<body>
   <div class="main-layout">
-   <aside class="sidebar">
-    <div class="side-head">
-     <div class="logo modern-logo">
-      UP
-     </div>
-     <h2>
-      Instructor Panel
-     </h2>
-    </div>
-    <a href="instructor-dashboard.html">
-     Dashboard
-    </a>
-    <a href="instructor-students.html">
-     Students
-    </a>
-    <a href="instructor-courses.html">
-     Courses
-    </a>
-    <a href="instructor-create-assignment.html">
-     Create Assignment
-    </a>
-    <a href="instructor-submissions.html">
-     View Submissions
-    </a>
-    <a href="instructor-attendance.html">
-     Attendance
-    </a>
-    <a href="instructor-announcements.html">
-     Announcements
-    </a>
-    <a href="instructor-forum.html">
-     Forum
-    </a>
-    <a class="active" href="instructor-reports.html">
-     Reports
-    </a>
-    <a href="index.html">
-     Logout
-    </a>
-   </aside>
-   <div class="main-area">
-    <div class="topbar">
-     <div>
-      <h1>
-       Reports
-      </h1>
-      <p>
-       Instructor can select a student and view course based GPA reports and academic analytics.
-      </p>
-     </div>
-     <div class="user-box">
-      <span>
-       Ms. Nabila
-      </span>
-      <span class="role-tag">
-       Instructor
-      </span>
-     </div>
-    </div>
-    <div class="card">
-     <h2>
-      Select Student
-     </h2>
-     <div class="filter-row">
-      <div class="filter-box">
-       <label for="studentSelect">
-        Student Name
-       </label>
-       <select id="studentSelect" onchange="showStudentReport()">
-        <option value="nabil">
-         Nabil Hasan
-        </option>
-        <option value="farhan">
-         Farhan Ahmed
-        </option>
-        <option value="nusrat">
-         Nusrat Jahan
-        </option>
-       </select>
+    <aside class="sidebar">
+      <div class="side-head">
+        <div class="logo modern-logo">
+          UP
+        </div>
+        <h2>
+          Instructor Panel
+        </h2>
       </div>
-     </div>
-     <div class="student-report active-report" id="nabil">
-      <div class="cards-row">
-       <div class="card stat-card">
-        <h3>
-         Average GPA
-        </h3>
-        <p>
-         3.48
-        </p>
-       </div>
-       <div class="card stat-card">
-        <h3>
-         Attendance Rate
-        </h3>
-        <p>
-         89%
-        </p>
-       </div>
-       <div class="card stat-card">
-        <h3>
-         Submission Rate
-        </h3>
-        <p>
-         84%
-        </p>
-       </div>
-       <div class="two-col">
-        <div class="card">
-         <h2>
-          Student GPA Report
-         </h2>
-         <div class="table-wrap">
-          <table>
-           <tr>
-            <th>
-             Course Code
-            </th>
-            <th>
-             Course Title
-            </th>
-            <th>
-             Credit
-            </th>
-            <th>
-             GPA
-            </th>
-           </tr>
-           <tr>
-            <td>
-             CSE-101
-            </td>
-            <td>
-             Web Programming
-            </td>
-            <td>
-             3 Cr
-            </td>
-            <td>
-             3.75
-            </td>
-           </tr>
-           <tr>
-            <td>
-             CSE-205
-            </td>
-            <td>
-             Database Systems
-            </td>
-            <td>
-             3 Cr
-            </td>
-            <td>
-             3.50
-            </td>
-           </tr>
-           <tr>
-            <td>
-             ENG-103
-            </td>
-            <td>
-             Basic English
-            </td>
-            <td>
-             1 Cr
-            </td>
-            <td>
-             4.00
-            </td>
-           </tr>
-          </table>
-         </div>
+      <a href="instructor-dashboard.html">
+        Dashboard
+      </a>
+      <a href="instructor-students.html">
+        Students
+      </a>
+      <a href="instructor-courses.html">
+        Courses
+      </a>
+      <a href="instructor-create-assignment.html">
+        Create Assignment
+      </a>
+      <a href="instructor-submissions.html">
+        View Submissions
+      </a>
+      <a href="instructor-attendance.html">
+        Attendance
+      </a>
+      <a href="instructor-announcements.html">
+        Announcements
+      </a>
+      <a href="instructor-forum.html">
+        Forum
+      </a>
+      <a class="active" href="instructor-reports.html">
+        Reports
+      </a>
+      <a href="index.html">
+        Logout
+      </a>
+    </aside>
+    <div class="main-area">
+      <div class="topbar">
+        <div>
+          <h1>
+            Reports
+          </h1>
+          <p>
+            Instructor can select a student and view course based GPA reports and academic analytics.
+          </p>
         </div>
-        <div class="card">
-         <h2>
-          Academic Summary
-         </h2>
-         <ul class="info-list">
-          <li>
-           Student name: Nabil Hasan
-          </li>
-          <li>
-           Total completed credits: 7 Cr
-          </li>
-          <li>
-           Current semester GPA: 3.72
-          </li>
-          <li>
-           Overall CGPA: 3.65
-          </li>
-          <li>
-           Total submissions received: 39
-          </li>
-         </ul>
+        <div class="user-box">
+          <span>
+            Ms. Nabila
+          </span>
+          <span class="role-tag">
+            Instructor
+          </span>
         </div>
-       </div>
-       <div class="student-report" id="farhan">
-        <div class="cards-row">
-         <div class="card stat-card">
-          <h3>
-           Average GPA
-          </h3>
-          <p>
-           3.29
-          </p>
-         </div>
-         <div class="card stat-card">
-          <h3>
-           Attendance Rate
-          </h3>
-          <p>
-           86%
-          </p>
-         </div>
-         <div class="card stat-card">
-          <h3>
-           Submission Rate
-          </h3>
-          <p>
-           81%
-          </p>
-         </div>
-         <div class="two-col">
-          <div class="card">
-           <h2>
-            Student GPA Report
-           </h2>
-           <div class="table-wrap">
-            <table>
-             <tr>
-              <th>
-               Course Code
-              </th>
-              <th>
-               Course Title
-              </th>
-              <th>
-               Credit
-              </th>
-              <th>
-               GPA
-              </th>
-             </tr>
-             <tr>
-              <td>
-               CSE-110
-              </td>
-              <td>
-               Structured Programming
-              </td>
-              <td>
-               3 Cr
-              </td>
-              <td>
-               3.25
-              </td>
-             </tr>
-             <tr>
-              <td>
-               MAT-121
-              </td>
-              <td>
-               Discrete Mathematics
-              </td>
-              <td>
-               3 Cr
-              </td>
-              <td>
-               3.00
-              </td>
-             </tr>
-             <tr>
-              <td>
-               PHY-107
-              </td>
-              <td>
-               Physics
-              </td>
-              <td>
-               1 Cr
-              </td>
-              <td>
-               3.75
-              </td>
-             </tr>
-            </table>
-           </div>
+      </div>
+      <div class="card">
+        <h2>
+          Select Student
+        </h2>
+        <div class="filter-row">
+          <div class="filter-box">
+            <label for="studentSelect">
+              Student Name
+            </label>
+            <select id="studentSelect" onchange="showStudentReport()">
+              <option value="nabil">
+                Nabil Hasan
+              </option>
+              <option value="farhan">
+                Farhan Ahmed
+              </option>
+              <option value="nusrat">
+                Nusrat Jahan
+              </option>
+            </select>
           </div>
-          <div class="card">
-           <h2>
-            Academic Summary
-           </h2>
-           <ul class="info-list">
-            <li>
-             Student name: Farhan Ahmed
-            </li>
-            <li>
-             Total completed credits: 7 Cr
-            </li>
-            <li>
-             Current semester GPA: 3.17
-            </li>
-            <li>
-             Overall CGPA: 3.29
-            </li>
-            <li>
-             Total submissions received: 35
-            </li>
-           </ul>
-          </div>
-         </div>
-         <div class="student-report" id="nusrat">
+        </div>
+        <div class="student-report active-report" id="nabil">
           <div class="cards-row">
-           <div class="card stat-card">
-            <h3>
-             Average GPA
-            </h3>
-            <p>
-             3.82
-            </p>
-           </div>
-           <div class="card stat-card">
-            <h3>
-             Attendance Rate
-            </h3>
-            <p>
-             94%
-            </p>
-           </div>
-           <div class="card stat-card">
-            <h3>
-             Submission Rate
-            </h3>
-            <p>
-             97%
-            </p>
-           </div>
-           <div class="two-col">
-            <div class="card">
-             <h2>
-              Student GPA Report
-             </h2>
-             <div class="table-wrap">
-              <table>
-               <tr>
-                <th>
-                 Course Code
-                </th>
-                <th>
-                 Course Title
-                </th>
-                <th>
-                 Credit
-                </th>
-                <th>
-                 GPA
-                </th>
-               </tr>
-               <tr>
-                <td>
-                 CSE-220
-                </td>
-                <td>
-                 Data Structures
-                </td>
-                <td>
-                 3 Cr
-                </td>
-                <td>
-                 3.80
-                </td>
-               </tr>
-               <tr>
-                <td>
-                 CSE-230
-                </td>
-                <td>
-                 Digital Logic
-                </td>
-                <td>
-                 3 Cr
-                </td>
-                <td>
-                 3.75
-                </td>
-               </tr>
-               <tr>
-                <td>
-                 ENG-103
-                </td>
-                <td>
-                 Basic English
-                </td>
-                <td>
-                 1 Cr
-                </td>
-                <td>
-                 4.00
-                </td>
-               </tr>
-              </table>
-             </div>
+            <div class="card stat-card">
+              <h3>
+                Average GPA
+              </h3>
+              <p>
+                3.48
+              </p>
             </div>
-            <div class="card">
-             <h2>
-              Academic Summary
-             </h2>
-             <ul class="info-list">
-              <li>
-               Student name: Nusrat Jahan
-              </li>
-              <li>
-               Total completed credits: 7 Cr
-              </li>
-              <li>
-               Current semester GPA: 3.84
-              </li>
-              <li>
-               Overall CGPA: 3.82
-              </li>
-              <li>
-               Total submissions received: 42
-              </li>
-             </ul>
+            <div class="card stat-card">
+              <h3>
+                Attendance Rate
+              </h3>
+              <p>
+                89%
+              </p>
             </div>
-           </div>
+            <div class="card stat-card">
+              <h3>
+                Submission Rate
+              </h3>
+              <p>
+                84%
+              </p>
+            </div>
+            <div class="two-col">
+              <div class="card">
+                <h2>
+                  Student GPA Report
+                </h2>
+                <div class="table-wrap">
+                  <table>
+                    <tr>
+                      <th>
+                        Course Code
+                      </th>
+                      <th>
+                        Course Title
+                      </th>
+                      <th>
+                        Credit
+                      </th>
+                      <th>
+                        GPA
+                      </th>
+                    </tr>
+                    <tr>
+                      <td>
+                        CSE-101
+                      </td>
+                      <td>
+                        Web Programming
+                      </td>
+                      <td>
+                        3 Cr
+                      </td>
+                      <td>
+                        3.75
+                      </td>
+                    </tr>
+                    <tr>
+                      <td>
+                        CSE-205
+                      </td>
+                      <td>
+                        Database Systems
+                      </td>
+                      <td>
+                        3 Cr
+                      </td>
+                      <td>
+                        3.50
+                      </td>
+                    </tr>
+                    <tr>
+                      <td>
+                        ENG-103
+                      </td>
+                      <td>
+                        Basic English
+                      </td>
+                      <td>
+                        1 Cr
+                      </td>
+                      <td>
+                        4.00
+                      </td>
+                    </tr>
+                  </table>
+                </div>
+              </div>
+              <div class="card">
+                <h2>
+                  Academic Summary
+                </h2>
+                <ul class="info-list">
+                  <li>
+                    Student name: Nabil Hasan
+                  </li>
+                  <li>
+                    Total completed credits: 7 Cr
+                  </li>
+                  <li>
+                    Current semester GPA: 3.72
+                  </li>
+                  <li>
+                    Overall CGPA: 3.65
+                  </li>
+                  <li>
+                    Total submissions received: 39
+                  </li>
+                </ul>
+              </div>
+            </div>
+            <div class="student-report" id="farhan">
+              <div class="cards-row">
+                <div class="card stat-card">
+                  <h3>
+                    Average GPA
+                  </h3>
+                  <p>
+                    3.29
+                  </p>
+                </div>
+                <div class="card stat-card">
+                  <h3>
+                    Attendance Rate
+                  </h3>
+                  <p>
+                    86%
+                  </p>
+                </div>
+                <div class="card stat-card">
+                  <h3>
+                    Submission Rate
+                  </h3>
+                  <p>
+                    81%
+                  </p>
+                </div>
+                <div class="two-col">
+                  <div class="card">
+                    <h2>
+                      Student GPA Report
+                    </h2>
+                    <div class="table-wrap">
+                      <table>
+                        <tr>
+                          <th>
+                            Course Code
+                          </th>
+                          <th>
+                            Course Title
+                          </th>
+                          <th>
+                            Credit
+                          </th>
+                          <th>
+                            GPA
+                          </th>
+                        </tr>
+                        <tr>
+                          <td>
+                            CSE-110
+                          </td>
+                          <td>
+                            Structured Programming
+                          </td>
+                          <td>
+                            3 Cr
+                          </td>
+                          <td>
+                            3.25
+                          </td>
+                        </tr>
+                        <tr>
+                          <td>
+                            MAT-121
+                          </td>
+                          <td>
+                            Discrete Mathematics
+                          </td>
+                          <td>
+                            3 Cr
+                          </td>
+                          <td>
+                            3.00
+                          </td>
+                        </tr>
+                        <tr>
+                          <td>
+                            PHY-107
+                          </td>
+                          <td>
+                            Physics
+                          </td>
+                          <td>
+                            1 Cr
+                          </td>
+                          <td>
+                            3.75
+                          </td>
+                        </tr>
+                      </table>
+                    </div>
+                  </div>
+                  <div class="card">
+                    <h2>
+                      Academic Summary
+                    </h2>
+                    <ul class="info-list">
+                      <li>
+                        Student name: Farhan Ahmed
+                      </li>
+                      <li>
+                        Total completed credits: 7 Cr
+                      </li>
+                      <li>
+                        Current semester GPA: 3.17
+                      </li>
+                      <li>
+                        Overall CGPA: 3.29
+                      </li>
+                      <li>
+                        Total submissions received: 35
+                      </li>
+                    </ul>
+                  </div>
+                </div>
+                <div class="student-report" id="nusrat">
+                  <div class="cards-row">
+                    <div class="card stat-card">
+                      <h3>
+                        Average GPA
+                      </h3>
+                      <p>
+                        3.82
+                      </p>
+                    </div>
+                    <div class="card stat-card">
+                      <h3>
+                        Attendance Rate
+                      </h3>
+                      <p>
+                        94%
+                      </p>
+                    </div>
+                    <div class="card stat-card">
+                      <h3>
+                        Submission Rate
+                      </h3>
+                      <p>
+                        97%
+                      </p>
+                    </div>
+                    <div class="two-col">
+                      <div class="card">
+                        <h2>
+                          Student GPA Report
+                        </h2>
+                        <div class="table-wrap">
+                          <table>
+                            <tr>
+                              <th>
+                                Course Code
+                              </th>
+                              <th>
+                                Course Title
+                              </th>
+                              <th>
+                                Credit
+                              </th>
+                              <th>
+                                GPA
+                              </th>
+                            </tr>
+                            <tr>
+                              <td>
+                                CSE-220
+                              </td>
+                              <td>
+                                Data Structures
+                              </td>
+                              <td>
+                                3 Cr
+                              </td>
+                              <td>
+                                3.80
+                              </td>
+                            </tr>
+                            <tr>
+                              <td>
+                                CSE-230
+                              </td>
+                              <td>
+                                Digital Logic
+                              </td>
+                              <td>
+                                3 Cr
+                              </td>
+                              <td>
+                                3.75
+                              </td>
+                            </tr>
+                            <tr>
+                              <td>
+                                ENG-103
+                              </td>
+                              <td>
+                                Basic English
+                              </td>
+                              <td>
+                                1 Cr
+                              </td>
+                              <td>
+                                4.00
+                              </td>
+                            </tr>
+                          </table>
+                        </div>
+                      </div>
+                      <div class="card">
+                        <h2>
+                          Academic Summary
+                        </h2>
+                        <ul class="info-list">
+                          <li>
+                            Student name: Nusrat Jahan
+                          </li>
+                          <li>
+                            Total completed credits: 7 Cr
+                          </li>
+                          <li>
+                            Current semester GPA: 3.84
+                          </li>
+                          <li>
+                            Overall CGPA: 3.82
+                          </li>
+                          <li>
+                            Total submissions received: 42
+                          </li>
+                        </ul>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+                <script>
+                  function showStudentReport() {
+                    var selectedStudent = document.getElementById('studentSelect').value;
+                    var reports = document.getElementsByClassName('student-report');
+
+                    for (var i = 0; i < reports.length; i++) {
+                      reports[i].style.display = 'none';
+                    }
+
+                    document.getElementById(selectedStudent).style.display = 'block';
+                  }
+
+                  showStudentReport();
+                </script>
+                <script src="assets/app.js"></script>
+              </div>
+            </div>
           </div>
-         </div>
-         <script>
-          function showStudentReport() {
-      var selectedStudent = document.getElementById('studentSelect').value;
-      var reports = document.getElementsByClassName('student-report');
-
-      for (var i = 0; i < reports.length; i++) {
-        reports[i].style.display = 'none';
-      }
-
-      document.getElementById(selectedStudent).style.display = 'block';
-    }
-
-    showStudentReport();
-<<<<<<< HEAD
-  </script>
-  <script src="assets/app.js"></script>
+        </div>
+      </div>
+    </div>
+  </div>
 </body>
 
 </html>
-=======
-         </script>
-         <script src="assets/app.js">
-         </script>
-        </div>
-       </div>
-      </div>
-     </div>
-    </div>
-   </div>
-  </div>
- </body>
-</html>
->>>>>>> e41daee (ui update and js added)

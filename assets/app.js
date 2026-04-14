@@ -169,29 +169,6 @@
 
   function wireLogin() {
     if (path !== 'index.html') return;
-<<<<<<< HEAD
-    const emailInput = qs('input[type="email"]');
-    const passInput = qs('input[type="password"]');
-    const studentBtn = qsa('.btn-row .btn')[0];
-    const instructorBtn = qsa('.btn-row .btn')[1];
-
-    function doLogin(role) {
-      const email = (emailInput.value || '').trim().toLowerCase();
-      const password = (passInput.value || '').trim();
-      const users = read('users');
-      const user = users.find((u) => u.email.toLowerCase() === email && u.password === password && u.role === role);
-
-      if (!email || !password) return showMessage('Enter email and password.', false);
-      if (!user) return showMessage('Invalid credentials for ' + role + '.', false);
-
-      setSession(user);
-      showMessage('Login successful.', true);
-      location.href = role === 'Student' ? 'student-dashboard.html' : 'instructor-dashboard.html';
-    }
-
-    if (studentBtn) studentBtn.addEventListener('click', (e) => { e.preventDefault(); doLogin('Student'); });
-    if (instructorBtn) instructorBtn.addEventListener('click', (e) => { e.preventDefault(); doLogin('Instructor'); });
-=======
     const rolePanel = qs('#role-choice-panel');
     const loginPanel = qs('#login-panel');
     const roleButtons = qsa('[data-role]');
@@ -271,7 +248,6 @@
     });
 
     showRoleStep();
->>>>>>> e41daee (ui update and js added)
   }
 
   function wireRegister() {
@@ -682,8 +658,6 @@
     }
   }
 
-<<<<<<< HEAD
-=======
 
   function pageMeta() {
     const session = getSession();
@@ -792,7 +766,6 @@
     enhanceTables();
   }
 
->>>>>>> e41daee (ui update and js added)
   function wireFallbackButtons() {
     qsa('a.btn[href="#"]').forEach((btn) => {
       if (!btn.dataset.boundFallback) {
@@ -816,9 +789,6 @@
   renderAttendance();
   renderCourses();
   renderStudents();
-<<<<<<< HEAD
-=======
   applyProfessionalUI();
->>>>>>> e41daee (ui update and js added)
   wireFallbackButtons();
 })();
