@@ -1,154 +1,159 @@
 <!DOCTYPE html>
 <html lang="en">
-
-<head>
-  <meta charset="utf-8" />
-  <meta content="width=device-width, initial-scale=1.0" name="viewport" />
+ <head>
+  <meta charset="utf-8"/>
+  <meta content="width=device-width, initial-scale=1.0" name="viewport"/>
   <title>
-    Create Assignment | University Portal
+   Create Assignment | University Portal
   </title>
-  <link href="assets/style.css" rel="stylesheet" />
-</head>
-
-<body>
+  <link href="assets/style.css" rel="stylesheet"/>
+ </head>
+ <body>
+  <button aria-controls="site-sidebar" aria-expanded="false" aria-label="Open navigation menu" class="mobile-nav-toggle" type="button">
+   <span></span>
+   <span></span>
+   <span></span>
+  </button>
+  <div class="mobile-nav-overlay"></div>
   <div class="main-layout">
-    <aside class="sidebar">
-      <div class="side-head">
-        <div class="logo modern-logo">
-          UP
-        </div>
-        <h2>
-          Instructor Panel
-        </h2>
-      </div>
-      <a class="" href="instructor-dashboard.html">
-        Dashboard
-      </a>
-      <a class="" href="instructor-students.html">
-        Students
-      </a>
-      <a class="" href="instructor-courses.html">
-        Courses
-      </a>
-      <a class="active" href="instructor-create-assignment.html">
-        Create Assignment
-      </a>
-      <a class="" href="instructor-submissions.html">
-        View Submissions
-      </a>
-      <a class="" href="instructor-attendance.html">
-        Attendance
-      </a>
-      <a class="" href="instructor-announcements.html">
-        Announcements
-      </a>
-      <a class="" href="instructor-forum.html">
-        Forum
-      </a>
-      <a class="" href="instructor-reports.html">
-        Reports
-      </a>
-      <a href="index.html">
-        Logout
-      </a>
-    </aside>
-    <div class="main-area">
-      <div class="topbar">
-        <div>
-          <h1>
-            Create Assignment
-          </h1>
-          <p>
-            Instructor creates assignments here. Students cannot see this page.
-          </p>
-        </div>
-        <div class="user-box">
-          <span>
-            Ms. Nabila
-          </span>
-          <span class="role-tag">
-            Instructor
-          </span>
-        </div>
-      </div>
-      <div class="card">
-        <h2>
-          Create Assignment
-        </h2>
-        <label>
-          Assignment Title
-        </label>
-        <input placeholder="Enter assignment title" type="text" />
-        <label>
-          Select Course
-        </label>
-        <select>
-          <option>
-            Web Programming
-          </option>
-          <option>
-            Database Systems
-          </option>
-        </select>
-        <label>
-          Deadline
-        </label>
-        <input type="date" />
-        <label>
-          Description
-        </label>
-        <textarea placeholder="Write assignment instruction"></textarea>
-        <div class="btn-row">
-          <a class="btn small-btn" href="#">
-            Publish Assignment
-          </a>
-        </div>
-      </div>
-      <div class="card">
-        <h2>
-          Published Assignments
-        </h2>
-        <div class="table-wrap">
-          <table>
-            <tr>
-              <th>
-                Title
-              </th>
-              <th>
-                Course
-              </th>
-              <th>
-                Deadline
-              </th>
-            </tr>
-            <tr>
-              <td>
-                Landing Page Design
-              </td>
-              <td>
-                Web Programming
-              </td>
-              <td>
-                15 Oct 2026
-              </td>
-            </tr>
-            <tr>
-              <td>
-                ER Diagram
-              </td>
-              <td>
-                Database Systems
-              </td>
-              <td>
-                18 Oct 2026
-              </td>
-            </tr>
-          </table>
-        </div>
-      </div>
+   <aside class="sidebar" id="site-sidebar" aria-hidden="true">
+    <div class="side-head">
+     <div class="logo modern-logo">
+      UP
+     </div>
+     <h2>
+      Instructor Panel
+     </h2>
     </div>
+    <a class="" href="instructor-dashboard.html">
+     Dashboard
+    </a>
+    <a class="" href="instructor-students.html">
+     Students
+    </a>
+    <a class="" href="instructor-courses.html">
+     Courses
+    </a>
+    <a class="active" href="instructor-create-assignment.html">
+     Create Assignment
+    </a>
+    <a class="" href="instructor-submissions.html">
+     View Submissions
+    </a>
+    <a class="" href="instructor-attendance.html">
+     Attendance
+    </a>
+    <a class="" href="instructor-announcements.html">
+     Announcements
+    </a>
+    <a class="" href="instructor-forum.html">
+     Forum
+    </a>
+    <a class="" href="instructor-reports.html">
+     Reports
+    </a>
+    <a href="index.html">
+     Logout
+    </a>
+   </aside>
+   <div class="main-area">
+    <div class="topbar">
+     <div>
+      <h1>
+       Create Assignment
+      </h1>
+      <p>
+       Instructor creates assignments here. Students cannot see this page.
+      </p>
+     </div>
+     <div class="user-box">
+      <span>
+       Ms. Nabila
+      </span>
+      <span class="role-tag">
+       Instructor
+      </span>
+     </div>
+    </div>
+    <div class="card">
+     <h2>
+      Create Assignment
+     </h2>
+     <label>
+      Assignment Title
+     </label>
+     <input placeholder="Enter assignment title" type="text"/>
+     <label>
+      Select Course
+     </label>
+     <select>
+      <option>
+       Web Programming
+      </option>
+      <option>
+       Database Systems
+      </option>
+     </select>
+     <label>
+      Deadline
+     </label>
+     <input type="date"/>
+     <label>
+      Description
+     </label>
+     <textarea placeholder="Write assignment instruction"></textarea>
+     <div class="btn-row">
+      <a class="btn small-btn" href="#">
+       Publish Assignment
+      </a>
+     </div>
+    </div>
+    <div class="card">
+     <h2>
+      Published Assignments
+     </h2>
+     <div class="table-wrap">
+      <table>
+       <tr>
+        <th>
+         Title
+        </th>
+        <th>
+         Course
+        </th>
+        <th>
+         Deadline
+        </th>
+       </tr>
+       <tr>
+        <td>
+         Landing Page Design
+        </td>
+        <td>
+         Web Programming
+        </td>
+        <td>
+         15 Oct 2026
+        </td>
+       </tr>
+       <tr>
+        <td>
+         ER Diagram
+        </td>
+        <td>
+         Database Systems
+        </td>
+        <td>
+         18 Oct 2026
+        </td>
+       </tr>
+      </table>
+     </div>
+    </div>
+   </div>
   </div>
-  <script src="assets/app.js"></script>
-</body>
-
+  <script src="assets/app.js">
+  </script>
+ </body>
 </html>
+

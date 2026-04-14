@@ -9,8 +9,14 @@
   <link href="assets/style.css" rel="stylesheet"/>
  </head>
  <body>
+  <button aria-controls="site-sidebar" aria-expanded="false" aria-label="Open navigation menu" class="mobile-nav-toggle" type="button">
+   <span></span>
+   <span></span>
+   <span></span>
+  </button>
+  <div class="mobile-nav-overlay"></div>
   <div class="main-layout">
-   <aside class="sidebar">
+   <aside class="sidebar" id="site-sidebar" aria-hidden="true">
     <div class="side-head">
      <div class="logo small-logo">
       UP
@@ -109,4 +115,7 @@
   </div>
   <script src="assets/app.js"></script>
 </body>
+  <script src="assets/app.js">
+  </script>
+ </body>
 </html>

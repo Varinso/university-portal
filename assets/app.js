@@ -13,6 +13,8 @@
     students: 'ump_students'
   };
 
+  const APP_RELEASE = '2026-04-14-final';
+
   const defaults = {
     users: [
       { name: 'Joy E', email: 'student@uni.edu', id: '2023001', role: 'Student', password: '123456' },
@@ -51,6 +53,15 @@
     ]
   };
 
+  function resetAppStorageIfNeeded() {
+    const storedRelease = localStorage.getItem('ump_release');
+    if (storedRelease === APP_RELEASE) return;
+    Object.values(STORAGE_KEYS).forEach((storageKey) => {
+      localStorage.removeItem(storageKey);
+    });
+    localStorage.setItem('ump_release', APP_RELEASE);
+  }
+
   function initStore() {
     Object.entries(defaults).forEach(([key, value]) => {
       const storageKey = STORAGE_KEYS[key];
@@ -58,6 +69,16 @@
         localStorage.setItem(storageKey, JSON.stringify(value));
       }
     });
+
+    const storedUsers = read('users');
+    const mergedUsers = [...storedUsers];
+    defaults.users.forEach((demoUser) => {
+      const exists = mergedUsers.some((user) => (
+        user && user.email && user.email.toLowerCase() === demoUser.email.toLowerCase()
+      ));
+      if (!exists) mergedUsers.push(demoUser);
+    });
+    write('users', mergedUsers);
   }
 
   function read(key) {
@@ -195,22 +216,31 @@
       if (rolePanel) rolePanel.classList.add('hidden-panel');
       if (loginPanel) loginPanel.classList.remove('hidden-panel');
       if (selectedRolePill) selectedRolePill.textContent = role + ' Portal';
-      if (loginRoleLabel) loginRoleLabel.textContent = role + ' Email Address';
+      if (loginRoleLabel) loginRoleLabel.textContent = role + ' Email or ID';
       if (emailInput) {
-        emailInput.placeholder = 'Enter your email';
+        emailInput.placeholder = 'Enter your email or ID';
         emailInput.focus();
       }
     }
 
     function doLogin() {
-      const email = (emailInput && emailInput.value || '').trim().toLowerCase();
+      const identifier = (emailInput && emailInput.value || '').trim().toLowerCase();
       const password = (passInput && passInput.value || '').trim();
       const users = read('users');
-      const user = users.find((u) => u.email.toLowerCase() === email && u.password === password && u.role === activeRole);
+      const user = users.find((u) => {
+        const emailMatch = u.email && u.email.toLowerCase() === identifier;
+        const idMatch = u.id && String(u.id).toLowerCase() === identifier;
+        return (emailMatch || idMatch) && u.password === password && u.role === activeRole;
+      });
 
       if (!activeRole) return showMessage('Select Student or Instructor first.', false);
-      if (!email || !password) return showMessage('Enter email and password.', false);
-      if (!user) return showMessage('Invalid credentials for ' + activeRole + '.', false);
+      if (!identifier || !password) return showMessage('Enter email or ID and password.', false);
+      if (!user) {
+        const demoHint = activeRole === 'Student'
+          ? 'Try student@uni.edu / 123456'
+          : 'Try instructor@uni.edu / 123456';
+        return showMessage('Invalid credentials for ' + activeRole + '. ' + demoHint, false);
+      }
 
       setSession(user);
       showMessage('Login successful.', true);
@@ -248,6 +278,7 @@
     });
 
     showRoleStep();
+
   }
 
   function wireRegister() {
@@ -257,7 +288,7 @@
     const createBtn = qs('.btn-row .btn');
     if (!createBtn || inputs.length < 5) return;
 
-    createBtn.addEventListener('click', function (e) {
+    createBtn.onclick = function (e) {
       e.preventDefault();
       const [nameInput, emailInput, idInput, passInput, confirmInput] = inputs;
       const name = nameInput.value.trim();
@@ -283,7 +314,7 @@
       }
       showMessage('Account created. Redirecting to login...', true);
       setTimeout(() => { location.href = 'index.html'; }, 500);
-    });
+    };
   }
 
   function renderAnnouncements() {
@@ -302,7 +333,7 @@
       const [titleInput, messageInput] = qsa('.card input, .card textarea').filter((el) => !el.closest('table'));
       const btn = qsa('.btn').find((el) => /post announcement/i.test(el.textContent));
       if (btn && titleInput && messageInput) {
-        btn.addEventListener('click', function (e) {
+        btn.onclick = function (e) {
           e.preventDefault();
           const title = titleInput.value.trim();
           const message = messageInput.value.trim();
@@ -313,7 +344,7 @@
           messageInput.value = '';
           renderAnnouncements();
           showMessage('Announcement posted.', true);
-        }, { once: true });
+        };
       }
     }
   }
@@ -334,7 +365,7 @@
           <tr><td>${a.title}</td><td>${a.course}</td><td>${formatDate(a.deadline)}</td></tr>`).join('');
       }
       if (btn) {
-        btn.addEventListener('click', function (e) {
+        btn.onclick = function (e) {
           e.preventDefault();
           const title = titleInput.value.trim();
           const course = courseSelect.value.trim();
@@ -349,7 +380,7 @@
           renderAssignments();
           populateStudentSubmissionDefaults();
           showMessage('Assignment published.', true);
-        }, { once: true });
+        };
       }
     }
 
@@ -376,7 +407,7 @@
           <tr><td>${s.assignment}</td><td>${s.courseCode}</td><td><span class="badge${s.status === 'Submitted' ? '' : ' blue'}">${s.status}</span></td><td>${s.feedback}</td></tr>`).join('');
       }
       if (btn && session) {
-        btn.addEventListener('click', function (e) {
+        btn.onclick = function (e) {
           e.preventDefault();
           const selected = select.value;
           const found = assignments.find((a) => a.title === selected);
@@ -395,7 +426,7 @@
           fileInput.value = '';
           renderAssignments();
           showMessage('Assignment submitted.', true);
-        }, { once: true });
+        };
       }
     }
 
@@ -411,7 +442,7 @@
       const feedback = qsa('textarea')[0];
       const btn = qsa('.btn').find((el) => /save/i.test(el.textContent) || /submit/i.test(el.textContent) || /update/i.test(el.textContent));
       if (btn && inputs.length >= 3 && select && feedback) {
-        btn.addEventListener('click', function (e) {
+        btn.onclick = function (e) {
           e.preventDefault();
           const studentName = inputs[0].value.trim();
           const courseCode = inputs[1].value.trim();
@@ -427,7 +458,7 @@
           write('submissions', subs);
           renderAssignments();
           showMessage('Submission updated.', true);
-        }, { once: true });
+        };
       }
     }
   }
@@ -472,7 +503,7 @@
     const btn = qsa('.btn').find((el) => /post|ask|publish|create/i.test(el.textContent));
     const session = getSession();
     if (btn && topicInput && messageInput && session) {
-      btn.addEventListener('click', function (e) {
+      btn.onclick = function (e) {
         e.preventDefault();
         const topic = topicInput.value.trim();
         const message = messageInput.value.trim();
@@ -483,7 +514,7 @@
         messageInput.value = '';
         renderForum();
         showMessage('Discussion posted.', true);
-      }, { once: true });
+      };
     }
   }
 
@@ -505,7 +536,7 @@
       }
       const saveBtn = qsa('.btn').find((el) => /save|update/i.test(el.textContent));
       if (saveBtn && table) {
-        saveBtn.addEventListener('click', function (e) {
+        saveBtn.onclick = function (e) {
           e.preventDefault();
           const rows = qsa('tr', table).slice(1);
           const updated = rows.map((row, index) => ({
@@ -515,7 +546,7 @@
           }));
           write('attendance', updated);
           showMessage('Attendance saved.', true);
-        });
+        };
       }
       if (!saveBtn && table) {
         const wrapper = table.closest('.card') || document.body;
@@ -523,7 +554,7 @@
         action.className = 'btn-row';
         action.innerHTML = '<a href="#" class="btn small-btn">Save Attendance</a>';
         wrapper.appendChild(action);
-        action.querySelector('a').addEventListener('click', function (e) {
+        action.querySelector('a').onclick = function (e) {
           e.preventDefault();
           const rows = qsa('tr', table).slice(1);
           const updated = rows.map((row) => ({
@@ -533,7 +564,7 @@
           }));
           write('attendance', updated);
           showMessage('Attendance saved.', true);
-        });
+        };
       }
     }
   }
@@ -557,7 +588,7 @@
       const inputs = qsa('input[type="text"]');
       const btn = qsa('.btn').find((el) => /add|create|save/i.test(el.textContent));
       if (btn && inputs.length >= 4) {
-        btn.addEventListener('click', function (e) {
+        btn.onclick = function (e) {
           e.preventDefault();
           const [codeInput, titleInput, sectionInput, instructorInput] = inputs;
           const item = {
@@ -574,7 +605,7 @@
           inputs.forEach((i) => { i.value = ''; });
           renderCourses();
           showMessage('Course added.', true);
-        }, { once: true });
+        };
       }
     }
     if (path === 'student-dashboard.html') {
@@ -766,17 +797,51 @@
     enhanceTables();
   }
 
+
+
+  function setupMobileNav() {
+    const sidebar = qs('.sidebar');
+    const toggle = qs('.mobile-nav-toggle');
+    const overlay = qs('.mobile-nav-overlay');
+    if (!sidebar || !toggle || !overlay) return;
+
+    function setOpen(open) {
+      document.body.classList.toggle('mobile-nav-open', open);
+      toggle.setAttribute('aria-expanded', open ? 'true' : 'false');
+      sidebar.setAttribute('aria-hidden', open ? 'false' : 'true');
+    }
+
+    toggle.addEventListener('click', function () {
+      setOpen(!document.body.classList.contains('mobile-nav-open'));
+    });
+
+    overlay.addEventListener('click', function () {
+      setOpen(false);
+    });
+
+    qsa('a', sidebar).forEach((link) => {
+      link.addEventListener('click', function () {
+        if (window.innerWidth <= 960) setOpen(false);
+      });
+    });
+
+    window.addEventListener('resize', function () {
+      if (window.innerWidth > 960) setOpen(false);
+    });
+  }
+
   function wireFallbackButtons() {
     qsa('a.btn[href="#"]').forEach((btn) => {
       if (!btn.dataset.boundFallback) {
         btn.dataset.boundFallback = '1';
-        btn.addEventListener('click', function (e) {
+        btn.onclick = function (e) {
           e.preventDefault();
-        });
+        };
       }
     });
   }
 
+  resetAppStorageIfNeeded();
   initStore();
   populateStudentSubmissionDefaults();
   requireAuth();
@@ -790,5 +855,7 @@
   renderCourses();
   renderStudents();
   applyProfessionalUI();
+  setupMobileNav();
+
   wireFallbackButtons();
 })();
