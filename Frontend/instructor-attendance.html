@@ -1,206 +1,132 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="en">
-
-<head>
+  <head>
     <meta charset="utf-8" />
     <meta content="width=device-width, initial-scale=1.0" name="viewport" />
-    <title>
-        Attendance | University Portal
-    </title>
+    <title>Attendance | University Portal</title>
     <link href="assets/style.css" rel="stylesheet" />
-</head>
+  </head>
 
-<body>
-    <button aria-controls="site-sidebar" aria-expanded="false" aria-label="Open navigation menu"
-        class="mobile-nav-toggle" type="button">
-        <span></span>
-        <span></span>
-        <span></span>
+  <body>
+    <button
+      aria-controls="site-sidebar"
+      aria-expanded="false"
+      aria-label="Open navigation menu"
+      class="mobile-nav-toggle"
+      type="button"
+    >
+      <span></span>
+      <span></span>
+      <span></span>
     </button>
     <div class="mobile-nav-overlay"></div>
     <div class="main-layout">
-        <aside class="sidebar" id="site-sidebar" aria-hidden="true">
-            <div class="side-head">
-                <div class="logo modern-logo">
-                    UP
-                </div>
-                <h2>
-                    Instructor Panel
-                </h2>
-            </div>
-            <a class="" href="instructor-dashboard.html">
-                Dashboard
-            </a>
-            <a class="" href="instructor-students.html">
-                Students
-            </a>
-            <a class="" href="instructor-courses.html">
-                Courses
-            </a>
-            <a class="" href="instructor-create-assignment.html">
-                Create Assignment
-            </a>
-            <a class="" href="instructor-submissions.html">
-                View Submissions
-            </a>
-            <a class="active" href="instructor-attendance.html">
-                Attendance
-            </a>
-            <a class="" href="instructor-announcements.html">
-                Announcements
-            </a>
-            <a class="" href="instructor-forum.html">
-                Forum
-            </a>
-            <a class="" href="instructor-reports.html">
-                Reports
-            </a>
-            <a href="index.html">
-                Logout
-            </a>
-        </aside>
-        <div class="main-area">
-            <div class="topbar">
-                <div>
-                    <h1>
-                        Attendance
-                    </h1>
-                    <p>
-                        Instructor can mark attendance. Students cannot edit attendance.
-                    </p>
-                </div>
-                <div class="user-box">
-                    <span>
-                        Ms. Nabila
-                    </span>
-                    <span class="role-tag">
-                        Instructor
-                    </span>
-                </div>
-            </div>
-            <div class="card">
-                <h2>
-                    Take Attendance
-                </h2>
-                <label>
-                    Select Course
-                </label>
-                <select>
-                    <option>
-                        SPL (CSE-2122)
-                    </option>
-                    <option>
-                        Web Programming (CSE-3122)
-                    </option>
-                </select>
-                <label>
-                    Section
-                </label>
-                <select>
-                    <option>
-                        Section A
-                    </option>
-                    <option>
-                        Section B
-                    </option>
-                </select>
-                <div class="table-wrap">
-                    <table>
-                        <tr>
-                            <th>
-                                Student Name
-                            </th>
-                            <th>
-                                ID
-                            </th>
-                            <th>
-                                Attendance
-                            </th>
-                        </tr>
-                        <tr>
-                            <td>
-                                Nabil Hasan
-                            </td>
-                            <td>
-                                2023001
-                            </td>
-                            <td>
-                                <div class="attendance-options">
-                                    <label class="attendance-option">
-                                        <span>
-                                            Present
-                                        </span>
-                                        <input name="s1" type="radio" />
-                                    </label>
-                                    <label class="attendance-option">
-                                        <span>
-                                            Absent
-                                        </span>
-                                        <input name="s1" type="radio" />
-                                    </label>
-                                </div>
-                            </td>
-                        </tr>
-                        <tr>
-                            <td>
-                                Farhan Ahmed
-                            </td>
-                            <td>
-                                2023002
-                            </td>
-                            <td>
-                                <div class="attendance-options">
-                                    <label class="attendance-option">
-                                        <span>
-                                            Present
-                                        </span>
-                                        <input name="s2" type="radio" />
-                                    </label>
-                                    <label class="attendance-option">
-                                        <span>
-                                            Absent
-                                        </span>
-                                        <input name="s2" type="radio" />
-                                    </label>
-                                </div>
-                            </td>
-                        </tr>
-                        <tr>
-                            <td>
-                                Nusrat Jahan
-                            </td>
-                            <td>
-                                2023003
-                            </td>
-                            <td>
-                                <div class="attendance-options">
-                                    <label class="attendance-option">
-                                        <span>
-                                            Present
-                                        </span>
-                                        <input name="s3" type="radio" />
-                                    </label>
-                                    <label class="attendance-option">
-                                        <span>
-                                            Absent
-                                        </span>
-                                        <input name="s3" type="radio" />
-                                    </label>
-                                </div>
-                            </td>
-                        </tr>
-                    </table>
-                </div>
-                <div class="btn-row">
-                    <a class="btn small-btn" href="#">
-                        Save Attendance
-                    </a>
-                </div>
-            </div>
+      <aside class="sidebar" id="site-sidebar" aria-hidden="true">
+        <div class="side-head">
+          <div class="logo modern-logo">UP</div>
+          <h2>Instructor Panel</h2>
         </div>
+        <a class="" href="instructor-dashboard.html"> Dashboard </a>
+        <a class="" href="instructor-students.html"> Students </a>
+        <a class="" href="instructor-courses.html"> Courses </a>
+        <a class="" href="instructor-create-assignment.html">
+          Create Assignment
+        </a>
+        <a class="" href="instructor-submissions.html"> View Submissions </a>
+        <a class="active" href="instructor-attendance.html"> Attendance </a>
+        <a class="" href="instructor-announcements.html"> Announcements </a>
+        <a class="" href="instructor-forum.html"> Forum </a>
+        <a class="" href="instructor-reports.html"> Reports </a>
+        <a href="index.html"> Logout </a>
+      </aside>
+      <div class="main-area">
+        <div class="topbar">
+          <div>
+            <h1>Attendance</h1>
+            <p>
+              Instructor can mark attendance. Students cannot edit attendance.
+            </p>
+          </div>
+          <div class="user-box">
+            <span> Ms. Nabila </span>
+            <span class="role-tag"> Instructor </span>
+          </div>
+        </div>
+        <div class="card">
+          <h2>Take Attendance</h2>
+          <label> Select Course </label>
+          <select>
+            <option>SPL (CSE-2122)</option>
+            <option>Web Programming (CSE-3122)</option>
+          </select>
+          <label> Section </label>
+          <select>
+            <option>Section A</option>
+            <option>Section B</option>
+          </select>
+          <div class="table-wrap">
+            <table>
+              <tr>
+                <th>Student Name</th>
+                <th>ID</th>
+                <th>Attendance</th>
+              </tr>
+              <tr>
+                <td>Nabil Hasan</td>
+                <td>2023001</td>
+                <td>
+                  <div class="attendance-options">
+                    <label class="attendance-option">
+                      <span> Present </span>
+                      <input name="s1" type="radio" />
+                    </label>
+                    <label class="attendance-option">
+                      <span> Absent </span>
+                      <input name="s1" type="radio" />
+                    </label>
+                  </div>
+                </td>
+              </tr>
+              <tr>
+                <td>Farhan Ahmed</td>
+                <td>2023002</td>
+                <td>
+                  <div class="attendance-options">
+                    <label class="attendance-option">
+                      <span> Present </span>
+                      <input name="s2" type="radio" />
+                    </label>
+                    <label class="attendance-option">
+                      <span> Absent </span>
+                      <input name="s2" type="radio" />
+                    </label>
+                  </div>
+                </td>
+              </tr>
+              <tr>
+                <td>Nusrat Jahan</td>
+                <td>2023003</td>
+                <td>
+                  <div class="attendance-options">
+                    <label class="attendance-option">
+                      <span> Present </span>
+                      <input name="s3" type="radio" />
+                    </label>
+                    <label class="attendance-option">
+                      <span> Absent </span>
+                      <input name="s3" type="radio" />
+                    </label>
+                  </div>
+                </td>
+              </tr>
+            </table>
+          </div>
+          <div class="btn-row">
+            <a class="btn small-btn" href="#"> Save Attendance </a>
+          </div>
+        </div>
+      </div>
     </div>
-    <script src="assets/app.js">
-    </script>
-</body>
-
+    <script src="assets/app.js"></script>
+  </body>
 </html>
