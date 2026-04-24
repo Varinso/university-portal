@@ -1,118 +1,29 @@
 (function () {
   const path = location.pathname.split('/').pop() || 'index.html';
-
   const STORAGE_KEYS = {
-    users: 'ump_users',
-    session: 'ump_session',
-    announcements: 'ump_announcements',
-    assignments: 'ump_assignments',
-    submissions: 'ump_submissions',
-    forum: 'ump_forum',
-    attendance: 'ump_attendance',
-    courses: 'ump_courses',
-    students: 'ump_students'
+    token: 'ump_token',
+    session: 'ump_session'
   };
 
-  const APP_RELEASE = '2026-04-14-final';
+  const API_BASE = (window.UMP_API_BASE || 'http://localhost:5000/api').replace(/\/$/, '');
 
-  const defaults = {
-    users: [
-      { name: 'Joy E', email: 'student@uni.edu', id: '2023001', role: 'Student', password: '123456' },
-      { name: 'Ms. Nabila', email: 'instructor@uni.edu', id: 'FAC101', role: 'Instructor', password: '123456' }
-    ],
-    announcements: [
-      { title: 'Assignment Deadline Extended', message: 'The deadline has been extended by two days.', date: '10 Oct 2026', audience: 'All Students', authorRole: 'Instructor' },
-      { title: 'Extra Class Notice', message: 'An extra class will be held for Web Programming.', date: '08 Oct 2026', audience: 'Web Programming', authorRole: 'Instructor' }
-    ],
-    assignments: [
-      { title: 'Landing Page Design', course: 'Web Programming', courseCode: 'CSE-101', deadline: '2026-10-15', description: 'Design a responsive landing page.' },
-      { title: 'ER Diagram', course: 'Database Systems', courseCode: 'CSE-205', deadline: '2026-10-18', description: 'Create an ER diagram for the given scenario.' }
-    ],
-    submissions: [
-      { assignment: 'Landing Page Design', courseCode: 'CSE-101', studentName: 'Joy E', status: 'Submitted', feedback: 'Pending', gpa: '' },
-      { assignment: 'ER Diagram', courseCode: 'CSE-205', studentName: 'Joy E', status: 'Not Submitted', feedback: '-', gpa: '' }
-    ],
-    forum: [
-      { topic: 'Need help with flexbox layout', message: 'How do I center a card perfectly?', author: 'Joy E', role: 'Student', date: '12 Apr 2026' },
-      { topic: 'Database project guidance', message: 'Please review the ER diagram requirements.', author: 'Ms. Nabila', role: 'Instructor', date: '11 Apr 2026' }
-    ],
-    attendance: [
-      { name: 'Joy E', id: '2023001', status: 'Present' },
-      { name: 'Nadia Islam', id: '2023002', status: 'Present' },
-      { name: 'Rafi Hasan', id: '2023003', status: 'Absent' }
-    ],
-    courses: [
-      { code: 'CSE-101', title: 'Web Programming', section: 'A', instructor: 'Ms. Nabila', credit: '3 Cr', gpa: '3.75' },
-      { code: 'CSE-205', title: 'Database Systems', section: 'A', instructor: 'Ms. Nabila', credit: '3 Cr', gpa: '3.50' },
-      { code: 'ENG-103', title: 'Basic English', section: 'B', instructor: 'Mr. Rahman', credit: '1 Cr', gpa: '4.00' }
-    ],
-    students: [
-      { name: 'Joy E', id: '2023001', email: 'student@uni.edu', department: 'CSE' },
-      { name: 'Nadia Islam', id: '2023002', email: 'nadia@uni.edu', department: 'CSE' },
-      { name: 'Rafi Hasan', id: '2023003', email: 'rafi@uni.edu', department: 'CSE' }
-    ]
-  };
+  function qs(sel, root) { return (root || document).querySelector(sel); }
+  function qsa(sel, root) { return Array.from((root || document).querySelectorAll(sel)); }
 
-  function resetAppStorageIfNeeded() {
-    const storedRelease = localStorage.getItem('ump_release');
-    if (storedRelease === APP_RELEASE) return;
-    Object.values(STORAGE_KEYS).forEach((storageKey) => {
-      localStorage.removeItem(storageKey);
-    });
-    localStorage.setItem('ump_release', APP_RELEASE);
+  function escapeHtml(value) {
+    return String(value || '')
+      .replace(/&/g, '&amp;')
+      .replace(/</g, '&lt;')
+      .replace(/>/g, '&gt;')
+      .replace(/"/g, '&quot;')
+      .replace(/'/g, '&#039;');
   }
 
-  function initStore() {
-    Object.entries(defaults).forEach(([key, value]) => {
-      const storageKey = STORAGE_KEYS[key];
-      if (storageKey && !localStorage.getItem(storageKey)) {
-        localStorage.setItem(storageKey, JSON.stringify(value));
-      }
-    });
-
-    const storedUsers = read('users');
-    const mergedUsers = [...storedUsers];
-    defaults.users.forEach((demoUser) => {
-      const exists = mergedUsers.some((user) => (
-        user && user.email && user.email.toLowerCase() === demoUser.email.toLowerCase()
-      ));
-      if (!exists) mergedUsers.push(demoUser);
-    });
-    write('users', mergedUsers);
-  }
-
-  function read(key) {
-    try {
-      return JSON.parse(localStorage.getItem(STORAGE_KEYS[key])) || [];
-    } catch (e) {
-      return Array.isArray(defaults[key]) ? [...defaults[key]] : null;
-    }
-  }
-
-  function write(key, value) {
-    localStorage.setItem(STORAGE_KEYS[key], JSON.stringify(value));
-  }
-
-  function getSession() {
-    try {
-      return JSON.parse(localStorage.getItem(STORAGE_KEYS.session)) || null;
-    } catch (e) {
-      return null;
-    }
-  }
-
-  function setSession(user) {
-    localStorage.setItem(STORAGE_KEYS.session, JSON.stringify(user));
-  }
-
-  function clearSession() {
-    localStorage.removeItem(STORAGE_KEYS.session);
-  }
-
-  function pageRole() {
-    if (path.startsWith('student-')) return 'Student';
-    if (path.startsWith('instructor-')) return 'Instructor';
-    return null;
+  function formatDate(input) {
+    if (!input) return '-';
+    const d = new Date(input);
+    if (Number.isNaN(d.getTime())) return input;
+    return d.toLocaleDateString('en-GB', { day: '2-digit', month: 'short', year: 'numeric' });
   }
 
   function showMessage(message, ok) {
@@ -136,43 +47,89 @@
     box.textContent = message;
     box.style.display = 'block';
     clearTimeout(box._timer);
-    box._timer = setTimeout(() => { box.style.display = 'none'; }, 2500);
+    box._timer = setTimeout(() => { box.style.display = 'none'; }, 2800);
   }
 
-  function formatDate(isoDate) {
-    if (!isoDate) return '-';
-    const d = new Date(isoDate);
-    if (Number.isNaN(d.getTime())) return isoDate;
-    return d.toLocaleDateString('en-GB', { day: '2-digit', month: 'short', year: 'numeric' });
+  function getToken() {
+    return localStorage.getItem(STORAGE_KEYS.token) || '';
   }
 
-  function qs(sel, root) { return (root || document).querySelector(sel); }
-  function qsa(sel, root) { return Array.from((root || document).querySelectorAll(sel)); }
+  function setToken(token) {
+    localStorage.setItem(STORAGE_KEYS.token, token);
+  }
 
-  function setText(selector, value, all) {
-    if (all) return qsa(selector).forEach((el) => { el.textContent = value; });
-    const el = qs(selector);
-    if (el) el.textContent = value;
+  function clearToken() {
+    localStorage.removeItem(STORAGE_KEYS.token);
+  }
+
+  function getSession() {
+    try {
+      return JSON.parse(localStorage.getItem(STORAGE_KEYS.session)) || null;
+    } catch (_error) {
+      return null;
+    }
+  }
+
+  function setSession(user) {
+    localStorage.setItem(STORAGE_KEYS.session, JSON.stringify(user));
+  }
+
+  function clearSession() {
+    localStorage.removeItem(STORAGE_KEYS.session);
+    clearToken();
+  }
+
+  async function apiRequest(pathname, options) {
+    const requestOptions = options || {};
+    const headers = Object.assign({ 'Content-Type': 'application/json' }, requestOptions.headers || {});
+    const token = getToken();
+    if (token) headers.Authorization = 'Bearer ' + token;
+
+    const response = await fetch(API_BASE + pathname, {
+      method: requestOptions.method || 'GET',
+      headers,
+      body: requestOptions.body ? JSON.stringify(requestOptions.body) : undefined
+    });
+
+    const payload = await response.json().catch(() => ({}));
+    if (!response.ok) {
+      const message = payload.message || 'Request failed.';
+      if (response.status === 401) {
+        clearSession();
+      }
+      throw new Error(message);
+    }
+
+    return payload;
+  }
+
+  function pageRole() {
+    if (path.startsWith('student-')) return 'Student';
+    if (path.startsWith('instructor-')) return 'Instructor';
+    return null;
+  }
+
+  function hydrateUser(session) {
+    qsa('.user-box span:first-child').forEach((el) => { el.textContent = session.name || '-'; });
+    qsa('.role-tag').forEach((el) => { el.textContent = session.role || '-'; });
   }
 
   function requireAuth() {
     const requiredRole = pageRole();
     if (!requiredRole) return;
+
     const session = getSession();
     if (!session) {
       location.href = 'index.html';
       return;
     }
+
     if (session.role !== requiredRole) {
       location.href = session.role === 'Instructor' ? 'instructor-dashboard.html' : 'student-dashboard.html';
       return;
     }
-    hydrateUser(session);
-  }
 
-  function hydrateUser(session) {
-    qsa('.user-box span:first-child').forEach((el) => { el.textContent = session.name; });
-    qsa('.role-tag').forEach((el) => { el.textContent = session.role; });
+    hydrateUser(session);
   }
 
   function wireLogout() {
@@ -223,28 +180,28 @@
       }
     }
 
-    function doLogin() {
-      const identifier = (emailInput && emailInput.value || '').trim().toLowerCase();
+    async function doLogin() {
+      const identifier = (emailInput && emailInput.value || '').trim();
       const password = (passInput && passInput.value || '').trim();
-      const users = read('users');
-      const user = users.find((u) => {
-        const emailMatch = u.email && u.email.toLowerCase() === identifier;
-        const idMatch = u.id && String(u.id).toLowerCase() === identifier;
-        return (emailMatch || idMatch) && u.password === password && u.role === activeRole;
-      });
 
       if (!activeRole) return showMessage('Select Student or Instructor first.', false);
       if (!identifier || !password) return showMessage('Enter email or ID and password.', false);
-      if (!user) {
+
+      try {
+        const data = await apiRequest('/auth/login', {
+          method: 'POST',
+          body: { identifier, password, role: activeRole }
+        });
+        setToken(data.token);
+        setSession(data.user);
+        showMessage('Login successful.', true);
+        location.href = data.user.role === 'Instructor' ? 'instructor-dashboard.html' : 'student-dashboard.html';
+      } catch (error) {
         const demoHint = activeRole === 'Student'
           ? 'Try student@uni.edu / 123456'
           : 'Try instructor@uni.edu / 123456';
-        return showMessage('Invalid credentials for ' + activeRole + '. ' + demoHint, false);
+        showMessage((error.message || 'Login failed.') + ' ' + demoHint, false);
       }
-
-      setSession(user);
-      showMessage('Login successful.', true);
-      location.href = activeRole === 'Student' ? 'student-dashboard.html' : 'instructor-dashboard.html';
     }
 
     roleButtons.forEach((btn) => {
@@ -278,7 +235,6 @@
     });
 
     showRoleStep();
-
   }
 
   function wireRegister() {
@@ -288,7 +244,7 @@
     const createBtn = qs('.btn-row .btn');
     if (!createBtn || inputs.length < 5) return;
 
-    createBtn.onclick = function (e) {
+    createBtn.onclick = async function (e) {
       e.preventDefault();
       const [nameInput, emailInput, idInput, passInput, confirmInput] = inputs;
       const name = nameInput.value.trim();
@@ -297,398 +253,424 @@
       const role = roleSelect.value.trim();
       const password = passInput.value.trim();
       const confirm = confirmInput.value.trim();
-      const users = read('users');
 
       if (!name || !email || !id || !password || !confirm) return showMessage('Please fill in all fields.', false);
       if (password.length < 6) return showMessage('Password must be at least 6 characters.', false);
       if (password !== confirm) return showMessage('Passwords do not match.', false);
-      if (users.some((u) => u.email.toLowerCase() === email)) return showMessage('This email is already registered.', false);
 
-      const user = { name, email, id, role, password };
-      users.push(user);
-      write('users', users);
-      if (role === 'Student') {
-        const students = read('students');
-        students.push({ name, id, email, department: 'General' });
-        write('students', students);
+      try {
+        await apiRequest('/auth/register', {
+          method: 'POST',
+          body: { name, email, id, role, password, department: 'General' }
+        });
+        showMessage('Account created. Redirecting to login...', true);
+        setTimeout(() => { location.href = 'index.html'; }, 500);
+      } catch (error) {
+        showMessage(error.message || 'Registration failed.', false);
       }
-      showMessage('Account created. Redirecting to login...', true);
-      setTimeout(() => { location.href = 'index.html'; }, 500);
     };
   }
 
-  function renderAnnouncements() {
+  async function renderAnnouncements() {
     if (!path.includes('announcements')) return;
-    const announcements = read('announcements');
     const tables = qsa('table');
     const table = tables[tables.length - 1];
     if (!table) return;
 
-    const tbody = announcements.map((item) => (
-      `<tr><td>${item.title}</td><td>${item.date}</td><td>${item.audience || item.authorRole || '-'}</td></tr>`
-    )).join('');
-    table.innerHTML = `<tr><th>Title</th><th>Date</th><th>Audience</th></tr>${tbody}`;
+    try {
+      const announcements = await apiRequest('/announcements');
+      const body = announcements.map((item) => (
+        '<tr><td>' + escapeHtml(item.title) + '</td><td>' + escapeHtml(formatDate(item.date)) + '</td><td>' + escapeHtml(item.audience || item.authorRole || '-') + '</td></tr>'
+      )).join('');
+      table.innerHTML = '<tr><th>Title</th><th>Date</th><th>Audience</th></tr>' + body;
 
-    if (path.startsWith('instructor-')) {
-      const [titleInput, messageInput] = qsa('.card input, .card textarea').filter((el) => !el.closest('table'));
-      const btn = qsa('.btn').find((el) => /post announcement/i.test(el.textContent));
-      if (btn && titleInput && messageInput) {
-        btn.onclick = function (e) {
-          e.preventDefault();
-          const title = titleInput.value.trim();
-          const message = messageInput.value.trim();
-          if (!title || !message) return showMessage('Add title and message.', false);
-          announcements.unshift({ title, message, date: formatDate(new Date().toISOString()), audience: 'All Students', authorRole: 'Instructor' });
-          write('announcements', announcements);
-          titleInput.value = '';
-          messageInput.value = '';
-          renderAnnouncements();
-          showMessage('Announcement posted.', true);
-        };
-      }
-    }
-  }
-
-  function renderAssignments() {
-    if (!(path.includes('assignment') || path.includes('submissions'))) return;
-    const assignments = read('assignments');
-
-    if (path === 'instructor-create-assignment.html') {
-      const titleInput = qsa('.card input[type="text"]')[0];
-      const courseSelect = qsa('.card select')[0];
-      const dateInput = qsa('.card input[type="date"]')[0];
-      const descInput = qsa('.card textarea')[0];
-      const btn = qsa('.btn').find((el) => /publish assignment/i.test(el.textContent));
-      const table = qsa('table')[0];
-      if (table) {
-        table.innerHTML = `<tr><th>Title</th><th>Course</th><th>Deadline</th></tr>` + assignments.map((a) => `
-          <tr><td>${a.title}</td><td>${a.course}</td><td>${formatDate(a.deadline)}</td></tr>`).join('');
-      }
-      if (btn) {
-        btn.onclick = function (e) {
-          e.preventDefault();
-          const title = titleInput.value.trim();
-          const course = courseSelect.value.trim();
-          const deadline = dateInput.value;
-          const description = descInput.value.trim();
-          if (!title || !course || !deadline || !description) return showMessage('Complete all assignment fields.', false);
-          assignments.unshift({ title, course, courseCode: course === 'Database Systems' ? 'CSE-205' : 'CSE-101', deadline, description });
-          write('assignments', assignments);
-          titleInput.value = '';
-          dateInput.value = '';
-          descInput.value = '';
-          renderAssignments();
-          populateStudentSubmissionDefaults();
-          showMessage('Assignment published.', true);
-        };
-      }
-    }
-
-    if (path === 'student-assignments.html') {
-      const table = qsa('table')[0];
-      const select = qsa('select')[0];
-      const fileInput = qsa('input[type="file"]')[0];
-      const comment = qsa('textarea')[0];
-      const btn = qsa('.btn').find((el) => /submit assignment/i.test(el.textContent));
-      const statusTable = qsa('table')[1];
-      const session = getSession();
-      const submissions = read('submissions');
-
-      if (table) {
-        table.innerHTML = `<tr><th>Title</th><th>Course Code</th><th>Deadline</th></tr>` + assignments.map((a) => `
-          <tr><td>${a.title}</td><td>${a.courseCode}</td><td>${formatDate(a.deadline)}</td></tr>`).join('');
-      }
-      if (select) {
-        select.innerHTML = assignments.map((a) => `<option>${a.title}</option>`).join('');
-      }
-      if (statusTable && session) {
-        const mySubs = submissions.filter((s) => s.studentName === session.name);
-        statusTable.innerHTML = `<tr><th>Assignment</th><th>Course Code</th><th>Status</th><th>Feedback</th></tr>` + mySubs.map((s) => `
-          <tr><td>${s.assignment}</td><td>${s.courseCode}</td><td><span class="badge${s.status === 'Submitted' ? '' : ' blue'}">${s.status}</span></td><td>${s.feedback}</td></tr>`).join('');
-      }
-      if (btn && session) {
-        btn.onclick = function (e) {
-          e.preventDefault();
-          const selected = select.value;
-          const found = assignments.find((a) => a.title === selected);
-          const submissionsNow = read('submissions');
-          const row = submissionsNow.find((s) => s.studentName === session.name && s.assignment === selected);
-          if (!selected || !found) return showMessage('Select an assignment.', false);
-          if (!fileInput.value) return showMessage('Choose a file to submit.', false);
-          if (row) {
-            row.status = 'Submitted';
-            row.feedback = comment.value.trim() || 'Pending review';
-          } else {
-            submissionsNow.push({ assignment: selected, courseCode: found.courseCode, studentName: session.name, status: 'Submitted', feedback: comment.value.trim() || 'Pending review', gpa: '' });
-          }
-          write('submissions', submissionsNow);
-          comment.value = '';
-          fileInput.value = '';
-          renderAssignments();
-          showMessage('Assignment submitted.', true);
-        };
-      }
-    }
-
-    if (path === 'instructor-submissions.html') {
-      const subs = read('submissions');
-      const table = qsa('table')[0];
-      if (table) {
-        table.innerHTML = `<tr><th>Student</th><th>Assignment</th><th>Course</th><th>Status</th><th>Feedback</th></tr>` + subs.map((s) => `
-          <tr><td>${s.studentName}</td><td>${s.assignment}</td><td>${s.courseCode}</td><td>${s.status}</td><td>${s.feedback}</td></tr>`).join('');
-      }
-      const inputs = qsa('input[type="text"]');
-      const select = qsa('select')[0];
-      const feedback = qsa('textarea')[0];
-      const btn = qsa('.btn').find((el) => /save/i.test(el.textContent) || /submit/i.test(el.textContent) || /update/i.test(el.textContent));
-      if (btn && inputs.length >= 3 && select && feedback) {
-        btn.onclick = function (e) {
-          e.preventDefault();
-          const studentName = inputs[0].value.trim();
-          const courseCode = inputs[1].value.trim();
-          const status = select.value.trim();
-          const gpa = inputs[2].value.trim();
-          const note = feedback.value.trim();
-          if (!studentName || !courseCode) return showMessage('Enter student and course.', false);
-          const row = subs.find((s) => s.studentName.toLowerCase() === studentName.toLowerCase() && s.courseCode.toLowerCase() === courseCode.toLowerCase());
-          if (!row) return showMessage('No matching submission found.', false);
-          row.status = status;
-          row.feedback = note || row.feedback;
-          row.gpa = gpa || row.gpa;
-          write('submissions', subs);
-          renderAssignments();
-          showMessage('Submission updated.', true);
-        };
-      }
-    }
-  }
-
-  function populateStudentSubmissionDefaults() {
-    const assignments = read('assignments');
-    const users = read('users').filter((u) => u.role === 'Student');
-    const existing = read('submissions');
-    users.forEach((u) => {
-      assignments.forEach((a) => {
-        if (!existing.some((s) => s.studentName === u.name && s.assignment === a.title)) {
-          existing.push({ assignment: a.title, courseCode: a.courseCode, studentName: u.name, status: 'Not Submitted', feedback: '-', gpa: '' });
-        }
-      });
-    });
-    write('submissions', existing);
-  }
-
-  function renderForum() {
-    if (!path.includes('forum')) return;
-    const posts = read('forum');
-    let displayCard = qsa('.card').find((c) => /discussion|recent|topics|forum/i.test(c.textContent));
-    if (!displayCard) displayCard = qsa('.card')[qsa('.card').length - 1];
-
-    if (displayCard) {
-      const listHtml = posts.map((p) => `
-        <div style="padding:12px 0;border-bottom:1px solid #e7e7e7;">
-          <strong>${p.topic}</strong>
-          <p style="margin:6px 0;">${p.message}</p>
-          <small>${p.author} • ${p.role} • ${p.date}</small>
-        </div>`).join('');
-      if (!/Recent Discussions|Forum Topics|Discussion Board/i.test(displayCard.innerHTML)) {
-        displayCard.innerHTML += `<h2 style="margin-top:20px;">Recent Discussions</h2>${listHtml}`;
-      } else {
-        const heading = displayCard.querySelector('h2') ? displayCard.querySelector('h2').outerHTML : '<h2>Recent Discussions</h2>';
-        displayCard.innerHTML = `${heading}${listHtml}`;
-      }
-    }
-
-    const topicInput = qsa('input[type="text"]')[0];
-    const messageInput = qsa('textarea')[0];
-    const btn = qsa('.btn').find((el) => /post|ask|publish|create/i.test(el.textContent));
-    const session = getSession();
-    if (btn && topicInput && messageInput && session) {
-      btn.onclick = function (e) {
-        e.preventDefault();
-        const topic = topicInput.value.trim();
-        const message = messageInput.value.trim();
-        if (!topic || !message) return showMessage('Enter topic and message.', false);
-        posts.unshift({ topic, message, author: session.name, role: session.role, date: formatDate(new Date().toISOString()) });
-        write('forum', posts);
-        topicInput.value = '';
-        messageInput.value = '';
-        renderForum();
-        showMessage('Discussion posted.', true);
-      };
-    }
-  }
-
-  function renderAttendance() {
-    if (!path.includes('attendance')) return;
-    const attendance = read('attendance');
-    const session = getSession();
-    const table = qsa('table')[0];
-
-    if (path === 'student-attendance.html' && table && session) {
-      const mine = attendance.find((a) => a.name === session.name) || { status: 'Present' };
-      table.innerHTML = `<tr><th>Student</th><th>ID</th><th>Status</th></tr><tr><td>${session.name}</td><td>${session.id || '-'}</td><td><span class="badge${mine.status === 'Present' ? '' : ' blue'}">${mine.status}</span></td></tr>`;
-    }
-
-    if (path === 'instructor-attendance.html' || path === 'attendance.html') {
-      if (table) {
-        table.innerHTML = `<tr><th>Name</th><th>ID</th><th>Status</th></tr>` + attendance.map((a) => `
-          <tr><td>${a.name}</td><td>${a.id}</td><td><select><option ${a.status === 'Present' ? 'selected' : ''}>Present</option><option ${a.status === 'Absent' ? 'selected' : ''}>Absent</option></select></td></tr>`).join('');
-      }
-      const saveBtn = qsa('.btn').find((el) => /save|update/i.test(el.textContent));
-      if (saveBtn && table) {
-        saveBtn.onclick = function (e) {
-          e.preventDefault();
-          const rows = qsa('tr', table).slice(1);
-          const updated = rows.map((row, index) => ({
-            name: row.children[0].textContent.trim(),
-            id: row.children[1].textContent.trim(),
-            status: row.querySelector('select').value
-          }));
-          write('attendance', updated);
-          showMessage('Attendance saved.', true);
-        };
-      }
-      if (!saveBtn && table) {
-        const wrapper = table.closest('.card') || document.body;
-        const action = document.createElement('div');
-        action.className = 'btn-row';
-        action.innerHTML = '<a href="#" class="btn small-btn">Save Attendance</a>';
-        wrapper.appendChild(action);
-        action.querySelector('a').onclick = function (e) {
-          e.preventDefault();
-          const rows = qsa('tr', table).slice(1);
-          const updated = rows.map((row) => ({
-            name: row.children[0].textContent.trim(),
-            id: row.children[1].textContent.trim(),
-            status: row.querySelector('select').value
-          }));
-          write('attendance', updated);
-          showMessage('Attendance saved.', true);
-        };
-      }
-    }
-  }
-
-  function renderCourses() {
-    if (!(path.includes('courses') || path === 'student-dashboard.html' || path === 'instructor-dashboard.html')) return;
-    const courses = read('courses');
-    if (path === 'student-courses.html') {
-      const table = qsa('table')[0];
-      if (table) {
-        table.innerHTML = `<tr><th>Course Code</th><th>Course Title</th><th>Credit</th><th>Instructor</th></tr>` + courses.map((c) => `
-          <tr><td>${c.code}</td><td>${c.title}</td><td>${c.credit}</td><td>${c.instructor}</td></tr>`).join('');
-      }
-    }
-    if (path === 'instructor-courses.html') {
-      const table = qsa('table')[0];
-      if (table) {
-        table.innerHTML = `<tr><th>Course Code</th><th>Course Title</th><th>Section</th><th>Instructor</th></tr>` + courses.map((c) => `
-          <tr><td>${c.code}</td><td>${c.title}</td><td>${c.section}</td><td>${c.instructor}</td></tr>`).join('');
-      }
-      const inputs = qsa('input[type="text"]');
-      const btn = qsa('.btn').find((el) => /add|create|save/i.test(el.textContent));
-      if (btn && inputs.length >= 4) {
-        btn.onclick = function (e) {
-          e.preventDefault();
-          const [codeInput, titleInput, sectionInput, instructorInput] = inputs;
-          const item = {
-            code: codeInput.value.trim(),
-            title: titleInput.value.trim(),
-            section: sectionInput.value.trim(),
-            instructor: instructorInput.value.trim(),
-            credit: '3 Cr',
-            gpa: '0.00'
+      if (path.startsWith('instructor-')) {
+        const titleInput = qsa('.card input')[0];
+        const messageInput = qsa('.card textarea')[0];
+        const btn = qsa('.btn').find((el) => /post announcement/i.test(el.textContent));
+        if (btn && titleInput && messageInput) {
+          btn.onclick = async function (e) {
+            e.preventDefault();
+            const title = titleInput.value.trim();
+            const message = messageInput.value.trim();
+            if (!title || !message) return showMessage('Add title and message.', false);
+            await apiRequest('/announcements', { method: 'POST', body: { title, message, audience: 'All Students' } });
+            titleInput.value = '';
+            messageInput.value = '';
+            await renderAnnouncements();
+            showMessage('Announcement posted.', true);
           };
-          if (!item.code || !item.title || !item.section || !item.instructor) return showMessage('Complete course details.', false);
-          courses.unshift(item);
-          write('courses', courses);
-          inputs.forEach((i) => { i.value = ''; });
-          renderCourses();
-          showMessage('Course added.', true);
-        };
+        }
       }
-    }
-    if (path === 'student-dashboard.html') {
-      const currentCourses = courses.slice(0, 3);
-      const table = qsa('table')[0];
-      if (table) {
-        table.innerHTML = `<tr><th>Course Code</th><th>Credit</th><th>GPA</th></tr>` + currentCourses.map((c) => `
-          <tr><td>${c.code}</td><td>${c.credit}</td><td>${c.gpa}</td></tr>`).join('');
-      }
-      const statCards = qsa('.stat-card p');
-      if (statCards[0]) statCards[0].textContent = String(courses.length);
+    } catch (error) {
+      showMessage('Announcements failed to load: ' + error.message, false);
     }
   }
 
-  function renderStudents() {
-    if (!(path.includes('students') || path.includes('reports'))) return;
-    const students = read('students');
-    if (path === 'instructor-students.html' || path === 'students.html') {
-      const table = qsa('table')[0];
-      if (table) {
-        table.innerHTML = `<tr><th>Name</th><th>ID</th><th>Email</th><th>Department</th></tr>` + students.map((s) => `
-          <tr><td>${s.name}</td><td>${s.id}</td><td>${s.email}</td><td>${s.department}</td></tr>`).join('');
+  async function renderAssignments() {
+    if (!(path.includes('assignment') || path.includes('submissions'))) return;
+
+    try {
+      const assignments = await apiRequest('/assignments');
+
+      if (path === 'instructor-create-assignment.html') {
+        const titleInput = qsa('.card input[type="text"]')[0];
+        const courseSelect = qsa('.card select')[0];
+        const dateInput = qsa('.card input[type="date"]')[0];
+        const descInput = qsa('.card textarea')[0];
+        const btn = qsa('.btn').find((el) => /publish assignment/i.test(el.textContent));
+        const table = qsa('table')[0];
+
+        const courses = await apiRequest('/courses');
+        if (courseSelect) {
+          courseSelect.innerHTML = courses.map((c) => '<option value="' + c.id + '">' + escapeHtml(c.title + ' (' + c.code + ')') + '</option>').join('');
+        }
+
+        if (table) {
+          table.innerHTML = '<tr><th>Title</th><th>Course</th><th>Deadline</th></tr>' + assignments.map((a) => (
+            '<tr><td>' + escapeHtml(a.title) + '</td><td>' + escapeHtml(a.course) + '</td><td>' + escapeHtml(formatDate(a.deadline)) + '</td></tr>'
+          )).join('');
+        }
+
+        if (btn && courseSelect) {
+          btn.onclick = async function (e) {
+            e.preventDefault();
+            const title = titleInput.value.trim();
+            const courseId = Number(courseSelect.value || 0);
+            const deadline = dateInput.value;
+            const description = descInput.value.trim();
+            if (!title || !courseId || !deadline || !description) return showMessage('Complete all assignment fields.', false);
+            await apiRequest('/assignments', { method: 'POST', body: { title, courseId, deadline, description } });
+            titleInput.value = '';
+            dateInput.value = '';
+            descInput.value = '';
+            await renderAssignments();
+            showMessage('Assignment published.', true);
+          };
+        }
       }
+
+      if (path === 'student-assignments.html') {
+        const table = qsa('table')[0];
+        const select = qsa('select')[0];
+        const comment = qsa('textarea')[0];
+        const fileInput = qsa('input[type="file"]')[0];
+        const btn = qsa('.btn').find((el) => /submit assignment/i.test(el.textContent));
+        const statusTable = qsa('table')[1];
+        const submissions = await apiRequest('/submissions');
+
+        if (table) {
+          table.innerHTML = '<tr><th>Title</th><th>Course Code</th><th>Deadline</th></tr>' + assignments.map((a) => (
+            '<tr><td>' + escapeHtml(a.title) + '</td><td>' + escapeHtml(a.courseCode) + '</td><td>' + escapeHtml(formatDate(a.deadline)) + '</td></tr>'
+          )).join('');
+        }
+
+        if (select) {
+          select.innerHTML = assignments.map((a) => '<option value="' + a.id + '">' + escapeHtml(a.title) + '</option>').join('');
+        }
+
+        if (statusTable) {
+          statusTable.innerHTML = '<tr><th>Assignment</th><th>Course Code</th><th>Status</th><th>Feedback</th></tr>' + submissions.map((s) => (
+            '<tr><td>' + escapeHtml(s.assignment) + '</td><td>' + escapeHtml(s.courseCode) + '</td><td><span class="badge' + (s.status === 'Submitted' ? '' : ' blue') + '">' + escapeHtml(s.status) + '</span></td><td>' + escapeHtml(s.feedback || '-') + '</td></tr>'
+          )).join('');
+        }
+
+        if (btn && select) {
+          btn.onclick = async function (e) {
+            e.preventDefault();
+            if (fileInput && !fileInput.value) return showMessage('Choose a file to submit.', false);
+            await apiRequest('/submissions', {
+              method: 'POST',
+              body: { assignmentId: Number(select.value), comment: comment ? comment.value.trim() : '' }
+            });
+            if (comment) comment.value = '';
+            if (fileInput) fileInput.value = '';
+            await renderAssignments();
+            showMessage('Assignment submitted.', true);
+          };
+        }
+      }
+
+      if (path === 'instructor-submissions.html') {
+        const subs = await apiRequest('/submissions');
+        const table = qsa('table')[0];
+        if (table) {
+          table.innerHTML = '<tr><th>Student</th><th>Assignment</th><th>Course</th><th>Status</th><th>Feedback</th></tr>' + subs.map((s) => (
+            '<tr><td>' + escapeHtml(s.studentName) + '</td><td>' + escapeHtml(s.assignment) + '</td><td>' + escapeHtml(s.courseCode) + '</td><td>' + escapeHtml(s.status) + '</td><td>' + escapeHtml(s.feedback || '-') + '</td></tr>'
+          )).join('');
+        }
+
+        const inputs = qsa('input[type="text"]');
+        const statusSelect = qsa('select')[0];
+        const feedback = qsa('textarea')[0];
+        const btn = qsa('.btn').find((el) => /save|submit|update/i.test(el.textContent));
+        if (btn && inputs.length >= 3 && statusSelect && feedback) {
+          btn.onclick = async function (e) {
+            e.preventDefault();
+            const studentName = inputs[0].value.trim();
+            const courseCode = inputs[1].value.trim().toLowerCase();
+            const gpa = inputs[2].value.trim();
+            const row = subs.find((s) => s.studentName.toLowerCase() === studentName.toLowerCase() && s.courseCode.toLowerCase() === courseCode);
+            if (!row) return showMessage('No matching submission found.', false);
+            await apiRequest('/submissions/' + row.id, {
+              method: 'PATCH',
+              body: {
+                status: statusSelect.value.trim(),
+                feedback: feedback.value.trim(),
+                gpa: gpa ? Number(gpa) : undefined
+              }
+            });
+            await renderAssignments();
+            showMessage('Submission updated.', true);
+          };
+        }
+      }
+    } catch (error) {
+      showMessage('Assignments failed to load: ' + error.message, false);
     }
-    if (path === 'instructor-reports.html') {
-      const select = qs('#studentSelect');
-      if (select) {
-        select.innerHTML = students.map((s, idx) => `<option value="student_report_${idx}">${s.name}</option>`).join('');
+  }
+
+  async function renderForum() {
+    if (!path.includes('forum')) return;
+
+    try {
+      const posts = await apiRequest('/forum');
+      let displayCard = qsa('.card').find((c) => /discussion|recent|topics|forum/i.test(c.textContent));
+      if (!displayCard) displayCard = qsa('.card')[qsa('.card').length - 1];
+
+      if (displayCard) {
+        const listHtml = posts.map((p) => (
+          '<div style="padding:12px 0;border-bottom:1px solid #e7e7e7;"><strong>' + escapeHtml(p.topic) + '</strong><p style="margin:6px 0;">' + escapeHtml(p.message) + '</p><small>' + escapeHtml(p.author) + ' • ' + escapeHtml(p.role) + ' • ' + escapeHtml(formatDate(p.date)) + '</small></div>'
+        )).join('');
+        const heading = displayCard.querySelector('h2') ? displayCard.querySelector('h2').outerHTML : '<h2>Recent Discussions</h2>';
+        displayCard.innerHTML = heading + listHtml;
       }
-      const host = qsa('.student-report');
-      host.forEach((el) => el.remove());
-      const container = qs('.main-area');
-      if (container) {
-        students.forEach((s, idx) => {
-          const studentSubs = read('submissions').filter((sub) => sub.studentName === s.name);
-          const avg = studentSubs.length ? (studentSubs.reduce((acc, sub) => acc + (parseFloat(sub.gpa) || 0), 0) / studentSubs.length).toFixed(2) : '0.00';
-          const attendance = read('attendance').find((a) => a.name === s.name);
-          const rate = attendance ? (attendance.status === 'Present' ? '100%' : '0%') : '0%';
-          const submitted = studentSubs.filter((sub) => sub.status === 'Submitted').length;
-          const subRate = studentSubs.length ? Math.round((submitted / studentSubs.length) * 100) + '%' : '0%';
+
+      const topicInput = qsa('input[type="text"]')[0];
+      const messageInput = qsa('textarea')[0];
+      const btn = qsa('.btn').find((el) => /post|ask|publish|create/i.test(el.textContent));
+      if (btn && topicInput && messageInput) {
+        btn.onclick = async function (e) {
+          e.preventDefault();
+          const topic = topicInput.value.trim();
+          const message = messageInput.value.trim();
+          if (!topic || !message) return showMessage('Enter topic and message.', false);
+          await apiRequest('/forum', { method: 'POST', body: { topic, message } });
+          topicInput.value = '';
+          messageInput.value = '';
+          await renderForum();
+          showMessage('Discussion posted.', true);
+        };
+      }
+    } catch (error) {
+      showMessage('Forum failed to load: ' + error.message, false);
+    }
+  }
+
+  async function renderAttendance() {
+    if (!path.includes('attendance')) return;
+
+    try {
+      if (path === 'student-attendance.html') {
+        const data = await apiRequest('/attendance/me');
+        const statCards = qsa('.stat-card p');
+        if (statCards[0]) statCards[0].textContent = String(data.stats.present || 0);
+        if (statCards[1]) statCards[1].textContent = String(data.stats.absent || 0);
+        if (statCards[2]) statCards[2].textContent = data.stats.rate || '0%';
+
+        const table = qsa('table')[0];
+        if (table) {
+          table.innerHTML = '<tr><th>Course</th><th>Total Classes</th><th>Present</th><th>Percentage</th></tr>' + (data.courses || []).map((row) => (
+            '<tr><td>' + escapeHtml(row.courseTitle || row.courseCode) + '</td><td>' + escapeHtml(row.totalClasses) + '</td><td>' + escapeHtml(row.presentClasses) + '</td><td>' + escapeHtml(row.percentage) + '</td></tr>'
+          )).join('');
+        }
+      }
+
+      if (path === 'instructor-attendance.html' || path === 'attendance.html') {
+        const [students, courses] = await Promise.all([
+          apiRequest('/students'),
+          apiRequest('/courses')
+        ]);
+
+        const courseSelect = qsa('select')[0];
+        if (courseSelect && courses.length) {
+          courseSelect.innerHTML = courses.map((c) => '<option value="' + c.id + '">' + escapeHtml(c.title + ' (' + c.code + ')') + '</option>').join('');
+        }
+
+        const table = qsa('table')[0];
+        if (table) {
+          table.innerHTML = '<tr><th>Name</th><th>ID</th><th>Status</th></tr>' + students.map((s) => (
+            '<tr data-student-id="' + s.id + '"><td>' + escapeHtml(s.name) + '</td><td>' + escapeHtml(s.studentId) + '</td><td><select><option selected>Present</option><option>Absent</option></select></td></tr>'
+          )).join('');
+        }
+
+        const saveBtn = qsa('.btn').find((el) => /save|update/i.test(el.textContent));
+        if (saveBtn && table) {
+          saveBtn.onclick = async function (e) {
+            e.preventDefault();
+            const courseId = Number(courseSelect ? courseSelect.value : 0);
+            if (!courseId) return showMessage('Select a course first.', false);
+            const rows = qsa('tr', table).slice(1);
+            const records = rows.map((row) => ({
+              studentId: Number(row.dataset.studentId),
+              status: row.querySelector('select').value
+            }));
+            const today = new Date().toISOString().slice(0, 10);
+            await apiRequest('/attendance', {
+              method: 'PUT',
+              body: { courseId, date: today, records }
+            });
+            showMessage('Attendance saved.', true);
+          };
+        }
+      }
+    } catch (error) {
+      showMessage('Attendance failed to load: ' + error.message, false);
+    }
+  }
+
+  async function renderCourses() {
+    if (!(path.includes('courses') || path === 'student-dashboard.html')) return;
+
+    try {
+      const courses = await apiRequest('/courses');
+
+      if (path === 'student-courses.html') {
+        const table = qsa('table')[0];
+        if (table) {
+          table.innerHTML = '<tr><th>Course Code</th><th>Course Title</th><th>Credit</th><th>GPA</th></tr>' + courses.map((c) => (
+            '<tr><td>' + escapeHtml(c.code) + '</td><td>' + escapeHtml(c.title) + '</td><td>' + escapeHtml(c.credit) + ' Cr</td><td>' + escapeHtml(Number(c.gpa || 0).toFixed(2)) + '</td></tr>'
+          )).join('');
+        }
+      }
+
+      if (path === 'instructor-courses.html') {
+        const table = qsa('table')[0];
+        if (table) {
+          table.innerHTML = '<tr><th>Course Code</th><th>Course Title</th><th>Section</th><th>Instructor</th></tr>' + courses.map((c) => (
+            '<tr><td>' + escapeHtml(c.code) + '</td><td>' + escapeHtml(c.title) + '</td><td>' + escapeHtml(c.section || '-') + '</td><td>' + escapeHtml(c.instructor || '-') + '</td></tr>'
+          )).join('');
+        }
+
+        const inputs = qsa('input[type="text"]');
+        const btn = qsa('.btn').find((el) => /add|create|save/i.test(el.textContent));
+        if (btn && inputs.length >= 3) {
+          btn.onclick = async function (e) {
+            e.preventDefault();
+            const code = inputs[0].value.trim();
+            const title = inputs[1].value.trim();
+            const section = inputs[2].value.trim() || 'A';
+            if (!code || !title || !section) return showMessage('Complete course details.', false);
+            await apiRequest('/courses', {
+              method: 'POST',
+              body: { code, title, section, credit: 3 }
+            });
+            inputs.forEach((i) => { i.value = ''; });
+            await renderCourses();
+            showMessage('Course added.', true);
+          };
+        }
+      }
+
+      if (path === 'student-dashboard.html') {
+        const table = qsa('table')[0];
+        if (table) {
+          table.innerHTML = '<tr><th>Course Code</th><th>Credit</th><th>GPA</th></tr>' + courses.slice(0, 3).map((c) => (
+            '<tr><td>' + escapeHtml(c.code) + '</td><td>' + escapeHtml(c.credit) + ' Cr</td><td>' + escapeHtml(Number(c.gpa || 0).toFixed(2)) + '</td></tr>'
+          )).join('');
+        }
+
+        const statCards = qsa('.stat-card p');
+        if (statCards[0]) statCards[0].textContent = String(courses.length);
+        try {
+          const dashboard = await apiRequest('/students/me/dashboard');
+          if (statCards[1]) statCards[1].textContent = dashboard.currentGpa;
+          if (statCards[2]) statCards[2].textContent = dashboard.overallCgpa;
+        } catch (_error) {
+        }
+      }
+    } catch (error) {
+      showMessage('Courses failed to load: ' + error.message, false);
+    }
+  }
+
+  async function renderStudents() {
+    if (!(path.includes('students') || path.includes('reports') || path === 'instructor-dashboard.html')) return;
+
+    try {
+      if (path === 'instructor-dashboard.html') {
+        const stats = await apiRequest('/instructors/me/dashboard');
+        const statCards = qsa('.stat-card p');
+        if (statCards[0]) statCards[0].textContent = String(stats.totalStudents || 0);
+        if (statCards[1]) statCards[1].textContent = String(stats.myCourses || 0);
+        if (statCards[2]) statCards[2].textContent = String(stats.pendingSubmissions || 0);
+        if (statCards[3]) statCards[3].textContent = String(stats.announcements || 0);
+      }
+
+      if (path === 'instructor-students.html' || path === 'students.html') {
+        const students = await apiRequest('/students');
+        const table = qsa('table')[0];
+        if (table) {
+          table.innerHTML = '<tr><th>Name</th><th>ID</th><th>Email</th><th>Department</th></tr>' + students.map((s) => (
+            '<tr><td>' + escapeHtml(s.name) + '</td><td>' + escapeHtml(s.studentId) + '</td><td>' + escapeHtml(s.email) + '</td><td>' + escapeHtml(s.department) + '</td></tr>'
+          )).join('');
+        }
+      }
+
+      if (path === 'instructor-reports.html') {
+        const students = await apiRequest('/students');
+        const select = qs('#studentSelect');
+        if (!select) return;
+
+        select.innerHTML = students.map((s) => (
+          '<option value="' + s.id + '">' + escapeHtml(s.name) + '</option>'
+        )).join('');
+
+        qsa('.student-report').forEach((el) => el.remove());
+        const container = qs('.main-area');
+        if (!container) return;
+
+        for (let idx = 0; idx < students.length; idx += 1) {
+          const student = students[idx];
+          const reportData = await apiRequest('/reports/student/' + student.id);
           const report = document.createElement('div');
-          report.id = `student_report_${idx}`;
+          report.id = 'student_report_' + student.id;
           report.className = 'student-report';
           report.style.display = idx === 0 ? 'block' : 'none';
-          report.innerHTML = `
-            <div class="cards-row">
-              <div class="card stat-card"><h3>Average GPA</h3><p>${avg}</p></div>
-              <div class="card stat-card"><h3>Attendance Rate</h3><p>${rate}</p></div>
-              <div class="card stat-card"><h3>Submission Rate</h3><p>${subRate}</p></div>
-            </div>
-            <div class="two-col">
-              <div class="card">
-                <h2>Student GPA Report</h2>
-                <table>
-                  <tr><th>Assignment</th><th>Course Code</th><th>Status</th><th>GPA</th></tr>
-                  ${studentSubs.map((sub) => `<tr><td>${sub.assignment}</td><td>${sub.courseCode}</td><td>${sub.status}</td><td>${sub.gpa || '-'}</td></tr>`).join('') || '<tr><td colspan="4">No data available</td></tr>'}
-                </table>
-              </div>
-              <div class="card">
-                <h2>Academic Summary</h2>
-                <ul class="info-list">
-                  <li>Student name: ${s.name}</li>
-                  <li>Student ID: ${s.id}</li>
-                  <li>Department: ${s.department}</li>
-                  <li>Total assignments: ${studentSubs.length}</li>
-                  <li>Submitted assignments: ${submitted}</li>
-                </ul>
-              </div>
-            </div>`;
+          report.innerHTML =
+            '<div class="cards-row">' +
+            '<div class="card stat-card"><h3>Average GPA</h3><p>' + escapeHtml(reportData.summary.averageGpa) + '</p></div>' +
+            '<div class="card stat-card"><h3>Attendance Rate</h3><p>' + escapeHtml(reportData.summary.attendanceRate) + '</p></div>' +
+            '<div class="card stat-card"><h3>Submission Rate</h3><p>' + escapeHtml(reportData.summary.submissionRate) + '</p></div>' +
+            '</div>' +
+            '<div class="two-col">' +
+            '<div class="card"><h2>Student GPA Report</h2><table><tr><th>Assignment</th><th>Course Code</th><th>Status</th><th>GPA</th></tr>' +
+            (reportData.rows.length ? reportData.rows.map((row) => (
+              '<tr><td>' + escapeHtml(row.assignment) + '</td><td>' + escapeHtml(row.courseCode) + '</td><td>' + escapeHtml(row.status) + '</td><td>' + escapeHtml(row.gpa || '-') + '</td></tr>'
+            )).join('') : '<tr><td colspan="4">No data available</td></tr>') +
+            '</table></div>' +
+            '<div class="card"><h2>Academic Summary</h2><ul class="info-list">' +
+            '<li>Student name: ' + escapeHtml(reportData.student.name) + '</li>' +
+            '<li>Student ID: ' + escapeHtml(reportData.student.studentCode) + '</li>' +
+            '<li>Department: ' + escapeHtml(reportData.student.department) + '</li>' +
+            '<li>Total completed credits: ' + escapeHtml(reportData.summary.totalCredits) + ' Cr</li>' +
+            '<li>Submitted assignments: ' + escapeHtml(reportData.summary.submittedAssignments) + ' / ' + escapeHtml(reportData.summary.totalAssignments) + '</li>' +
+            '</ul></div>' +
+            '</div>';
           container.appendChild(report);
-        });
-        if (select) {
-          select.onchange = function () {
-            qsa('.student-report').forEach((r) => { r.style.display = 'none'; });
-            const chosen = qs('#' + select.value);
-            if (chosen) chosen.style.display = 'block';
-          };
-          select.dispatchEvent(new Event('change'));
         }
+
+        select.onchange = function () {
+          qsa('.student-report').forEach((r) => { r.style.display = 'none'; });
+          const chosen = qs('#student_report_' + select.value);
+          if (chosen) chosen.style.display = 'block';
+        };
+        select.dispatchEvent(new Event('change'));
       }
+    } catch (error) {
+      showMessage('Student/report data failed to load: ' + error.message, false);
     }
   }
-
 
   function pageMeta() {
     const session = getSession();
@@ -723,7 +705,7 @@
   }
 
   function enhanceTopbar() {
-    const { session, role } = pageMeta();
+    const meta = pageMeta();
     qsa('.topbar').forEach((bar) => {
       if (bar.dataset.enhanced === '1') return;
       bar.dataset.enhanced = '1';
@@ -732,19 +714,17 @@
       if (titleBox && !qs('.page-kicker', titleBox)) {
         const kicker = document.createElement('div');
         kicker.className = 'page-kicker';
-        kicker.textContent = role === 'Portal' ? 'University workspace' : role + ' workspace';
+        kicker.textContent = meta.role === 'Portal' ? 'University workspace' : meta.role + ' workspace';
         titleBox.insertBefore(kicker, titleBox.firstChild);
       }
       if (titleBox && !qs('.topbar-actions', titleBox)) {
         const actions = document.createElement('div');
         actions.className = 'topbar-actions';
-        
         titleBox.appendChild(actions);
       }
       if (userBox && !qs('small', userBox)) {
         const note = document.createElement('small');
-        const idText = session && session.id ? 'ID: ' + session.id : 'Session active';
-        note.textContent = idText;
+        note.textContent = meta.session && meta.session.user_code ? 'ID: ' + meta.session.user_code : 'Session active';
         userBox.appendChild(note);
       }
     });
@@ -771,7 +751,7 @@
       card.dataset.icon = iconForCard(heading ? heading.textContent : '');
       if (!qs('small', card)) {
         const sub = document.createElement('small');
-        sub.textContent = 'Live front-end summary';
+        sub.textContent = 'Live backend summary';
         card.appendChild(sub);
       }
     });
@@ -796,8 +776,6 @@
     enhanceStatCards();
     enhanceTables();
   }
-
-
 
   function setupMobileNav() {
     const sidebar = qs('.sidebar');
@@ -841,21 +819,23 @@
     });
   }
 
-  resetAppStorageIfNeeded();
-  initStore();
-  populateStudentSubmissionDefaults();
-  requireAuth();
-  wireLogout();
-  wireLogin();
-  wireRegister();
-  renderAnnouncements();
-  renderAssignments();
-  renderForum();
-  renderAttendance();
-  renderCourses();
-  renderStudents();
-  applyProfessionalUI();
-  setupMobileNav();
+  async function boot() {
+    requireAuth();
+    wireLogout();
+    wireLogin();
+    wireRegister();
 
-  wireFallbackButtons();
+    await renderAnnouncements();
+    await renderAssignments();
+    await renderForum();
+    await renderAttendance();
+    await renderCourses();
+    await renderStudents();
+
+    applyProfessionalUI();
+    setupMobileNav();
+    wireFallbackButtons();
+  }
+
+  boot();
 })();
