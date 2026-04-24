@@ -738,7 +738,7 @@
       if (titleBox && !qs('.topbar-actions', titleBox)) {
         const actions = document.createElement('div');
         actions.className = 'topbar-actions';
-        actions.innerHTML = '<span class="meta-chip">Professional UI</span><span class="meta-chip">Responsive layout</span>';
+        
         titleBox.appendChild(actions);
       }
       if (userBox && !qs('small', userBox)) {
