@@ -1,0 +1,91 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta content="width=device-width, initial-scale=1.0" name="viewport" />
+    <title>Attendance | University Portal</title>
+    <link href="../assets/style.css" rel="stylesheet" />
+  </head>
+
+  <body>
+    <button
+      aria-controls="site-sidebar"
+      aria-expanded="false"
+      aria-label="Open navigation menu"
+      class="mobile-nav-toggle"
+      type="button"
+    >
+      <span></span>
+      <span></span>
+      <span></span>
+    </button>
+    <div class="mobile-nav-overlay"></div>
+    <div class="main-layout">
+      <aside class="sidebar" id="site-sidebar" aria-hidden="true">
+        <div class="side-head">
+          <div class="logo modern-logo">UP</div>
+          <h2>Student Panel</h2>
+        </div>
+        <a class="" href="student-dashboard.html"> Dashboard </a>
+        <a class="" href="student-courses.html"> My Courses </a>
+        <a class="" href="student-assignments.html"> Assignments </a>
+        <a class="active" href="student-attendance.html"> Attendance </a>
+        <a class="" href="student-announcements.html"> Announcements </a>
+        <a class="" href="student-forum.html"> Forum </a>
+        <a href="index.html"> Logout </a>
+      </aside>
+      <div class="main-area">
+        <div class="topbar">
+          <div>
+            <h1>Attendance</h1>
+            <p>Student can check attendance but cannot mark attendance.</p>
+          </div>
+          <div class="user-box">
+            <span> Joy E </span>
+            <span class="role-tag"> Student </span>
+          </div>
+        </div>
+        <div class="cards-row">
+          <div class="card stat-card">
+            <h3>Present</h3>
+            <p>34</p>
+          </div>
+          <div class="card stat-card">
+            <h3>Absent</h3>
+            <p>3</p>
+          </div>
+          <div class="card stat-card">
+            <h3>Attendance Rate</h3>
+            <p>92%</p>
+          </div>
+        </div>
+        <div class="card">
+          <h2>Attendance Report</h2>
+          <div class="table-wrap">
+            <table>
+              <tr>
+                <th>Course</th>
+                <th>Total Classes</th>
+                <th>Present</th>
+                <th>Percentage</th>
+              </tr>
+              <tr>
+                <td>Web Programming</td>
+                <td>15</td>
+                <td>14</td>
+                <td>93%</td>
+              </tr>
+              <tr>
+                <td>Database Systems</td>
+                <td>12</td>
+                <td>11</td>
+                <td>91%</td>
+              </tr>
+            </table>
+          </div>
+        </div>
+      </div>
+    </div>
+    <script src="../assets/app.js"></script>
+  </body>
+</html>

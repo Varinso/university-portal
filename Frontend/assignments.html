@@ -1,0 +1,119 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta content="width=device-width, initial-scale=1.0" name="viewport" />
+    <title>Assignments | University Portal</title>
+    <link href="../assets/style.css" rel="stylesheet" />
+  </head>
+
+  <body>
+    <button
+      aria-controls="site-sidebar"
+      aria-expanded="false"
+      aria-label="Open navigation menu"
+      class="mobile-nav-toggle"
+      type="button"
+    >
+      <span></span>
+      <span></span>
+      <span></span>
+    </button>
+    <div class="mobile-nav-overlay"></div>
+    <div class="main-layout">
+      <aside class="sidebar" id="site-sidebar" aria-hidden="true">
+        <div class="side-head">
+          <div class="logo small-logo">UP</div>
+          <h2>Portal</h2>
+        </div>
+        <a href="dashboard.html"> Dashboard </a>
+        <a href="students.html"> Students </a>
+        <a href="courses.html"> Courses </a>
+        <a href="assignments.html"> Assignments </a>
+        <a href="attendance.html"> Attendance </a>
+        <a href="announcements.html"> Announcements </a>
+        <a href="forum.html"> Forum </a>
+        <a href="reports.html"> Reports </a>
+        <a href="index.html"> Logout </a>
+      </aside>
+      <div class="main-area">
+        <div class="topbar">
+          <div>
+            <h1>Assignment System</h1>
+            <p>Create assignments, submit files, and check grading.</p>
+          </div>
+          <div class="user-box">
+            <span> Student Name </span>
+            <span class="role-tag"> Student </span>
+          </div>
+        </div>
+        <div class="two-col">
+          <div class="card">
+            <h2>Create Assignment</h2>
+            <label> Title </label>
+            <input placeholder="Assignment title" type="text" />
+            <label> Course </label>
+            <select>
+              <option>Web Programming</option>
+              <option>Database</option>
+            </select>
+            <label> Deadline </label>
+            <input type="date" />
+            <label> Description </label>
+            <textarea placeholder="Write assignment details"></textarea>
+            <div class="btn-row">
+              <a class="btn small-btn" href="#"> Publish </a>
+            </div>
+            <div class="card">
+              <h2>Submission Box</h2>
+              <label> Student Name </label>
+              <input placeholder="Enter name" type="text" />
+              <label> Course </label>
+              <select>
+                <option>Web Programming</option>
+                <option>Database</option>
+              </select>
+              <label> Upload File </label>
+              <input type="file" />
+              <div class="btn-row">
+                <a class="btn small-btn" href="#"> Submit </a>
+              </div>
+            </div>
+            <div class="card">
+              <h2>Recent Submissions</h2>
+              <div class="table-wrap">
+                <table>
+                  <tr>
+                    <th>Student</th>
+                    <th>Assignment</th>
+                    <th>Status</th>
+                    <th>Marks</th>
+                  </tr>
+                  <tr>
+                    <td>Joy E</td>
+                    <td>HTML Layout</td>
+                    <td>Submitted</td>
+                    <td>18/20</td>
+                  </tr>
+                  <tr>
+                    <td>Nadia Islam</td>
+                    <td>CSS Design</td>
+                    <td>Submitted</td>
+                    <td>17/20</td>
+                  </tr>
+                  <tr>
+                    <td>Rafi Hasan</td>
+                    <td>Form Design</td>
+                    <td>Pending</td>
+                    <td>-</td>
+                  </tr>
+                </table>
+              </div>
+            </div>
+          </div>
+        </div>
+        <script src="../assets/app.js"></script>
+      </div>
+    </div>
+  </body>
+</html>

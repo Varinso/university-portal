@@ -1,0 +1,91 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta content="width=device-width, initial-scale=1.0" name="viewport" />
+    <title>Announcements | University Portal</title>
+    <link href="../assets/style.css" rel="stylesheet" />
+  </head>
+
+  <body>
+    <button
+      aria-controls="site-sidebar"
+      aria-expanded="false"
+      aria-label="Open navigation menu"
+      class="mobile-nav-toggle"
+      type="button"
+    >
+      <span></span>
+      <span></span>
+      <span></span>
+    </button>
+    <div class="mobile-nav-overlay"></div>
+    <div class="main-layout">
+      <aside class="sidebar" id="site-sidebar" aria-hidden="true">
+        <div class="side-head">
+          <div class="logo modern-logo">UP</div>
+          <h2>Instructor Panel</h2>
+        </div>
+        <a class="" href="instructor-dashboard.html"> Dashboard </a>
+        <a class="" href="instructor-students.html"> Students </a>
+        <a class="" href="instructor-courses.html"> Courses </a>
+        <a class="" href="instructor-create-assignment.html">
+          Create Assignment
+        </a>
+        <a class="" href="instructor-submissions.html"> View Submissions </a>
+        <a class="" href="instructor-attendance.html"> Attendance </a>
+        <a class="active" href="instructor-announcements.html">
+          Announcements
+        </a>
+        <a class="" href="instructor-forum.html"> Forum </a>
+        <a class="" href="instructor-reports.html"> Reports </a>
+        <a href="index.html"> Logout </a>
+      </aside>
+      <div class="main-area">
+        <div class="topbar">
+          <div>
+            <h1>Announcements</h1>
+            <p>Instructor can post announcements for students.</p>
+          </div>
+          <div class="user-box">
+            <span> Ms. Nabila </span>
+            <span class="role-tag"> Instructor </span>
+          </div>
+        </div>
+        <div class="card">
+          <h2>Post Announcement</h2>
+          <label> Title </label>
+          <input placeholder="Write title" type="text" />
+          <label> Message </label>
+          <textarea placeholder="Write announcement message"></textarea>
+          <div class="btn-row">
+            <a class="btn small-btn" href="#"> Post Announcement </a>
+          </div>
+        </div>
+        <div class="card">
+          <h2>Recent Announcements</h2>
+          <div class="table-wrap">
+            <table>
+              <tr>
+                <th>Title</th>
+                <th>Date</th>
+                <th>Audience</th>
+              </tr>
+              <tr>
+                <td>Assignment Deadline Extended</td>
+                <td>10 Oct 2026</td>
+                <td>All Students</td>
+              </tr>
+              <tr>
+                <td>Extra Class Notice</td>
+                <td>08 Oct 2026</td>
+                <td>Web Programming</td>
+              </tr>
+            </table>
+          </div>
+        </div>
+      </div>
+    </div>
+    <script src="../assets/app.js"></script>
+  </body>
+</html>
