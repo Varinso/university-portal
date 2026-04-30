@@ -38,10 +38,12 @@ Quick start
 - npm run migrate
 - npm run seed
 
+Note: demo seeding is opt-in. To create the example demo accounts and sample data set `SEED_DEMO=true` in your `.env` before running `npm run seed`.
+
 5) Start backend
 - npm run dev
 
-Default demo login
+Default demo login (only if `SEED_DEMO=true`)
 - Student: student@uni.edu / 123456
 - Instructor: instructor@uni.edu / 123456
 

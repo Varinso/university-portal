@@ -1,7 +1,15 @@
+require('dotenv').config();
 const bcrypt = require('bcryptjs');
 const { query, pool } = require('../src/config/db');
 
 async function seed() {
+  // Optional demo seeding: only run when SEED_DEMO=true to avoid creating default accounts
+  const doSeed = String(process.env.SEED_DEMO || '').toLowerCase();
+  if (!(doSeed === '1' || doSeed === 'true' || doSeed === 'yes')) {
+    console.log('SEED_DEMO not enabled; skipping demo data seeding. Set SEED_DEMO=true to run seeds.');
+    await pool.end();
+    return;
+  }
   const studentHash = await bcrypt.hash('123456', 10);
   const instructorHash = await bcrypt.hash('123456', 10);
 
