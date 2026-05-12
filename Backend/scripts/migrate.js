@@ -1,6 +1,6 @@
 const fs = require('fs');
 const path = require('path');
-const { query, pool } = require('../src/config/db');
+const { db, query } = require('../src/config/db');
 
 function splitSqlStatements(sql) {
   return sql
@@ -9,29 +9,29 @@ function splitSqlStatements(sql) {
     .filter(Boolean);
 }
 
-async function runMigrations() {
+function runMigrations() {
   const migrationDir = path.join(__dirname, '..', 'db', 'migrations');
   const files = fs.readdirSync(migrationDir).filter((name) => name.endsWith('.sql')).sort();
 
-  for (const file of files) {
-    const sql = fs.readFileSync(path.join(migrationDir, file), 'utf8');
-    const statements = splitSqlStatements(sql);
+  try {
+    for (const file of files) {
+      const sql = fs.readFileSync(path.join(migrationDir, file), 'utf8');
+      const statements = splitSqlStatements(sql);
 
-    for (const statement of statements) {
-      await query(statement);
+      for (const statement of statements) {
+        query(statement);
+      }
+
+      console.log(`Applied migration: ${file}`);
     }
 
-    console.log(`Applied migration: ${file}`);
+    console.log('All migrations applied successfully.');
+  } catch (error) {
+    console.error('Migration error:', error);
+    process.exitCode = 1;
+  } finally {
+    db.close();
   }
-
-  console.log('All migrations applied.');
 }
 
-runMigrations()
-  .catch((error) => {
-    console.error(error);
-    process.exitCode = 1;
-  })
-  .finally(async () => {
-    await pool.end();
-  });
+runMigrations();

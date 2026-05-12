@@ -1,10 +1,10 @@
 const { query } = require('../config/db');
 
-async function getMyDashboard(req, res, next) {
+function getMyDashboard(req, res, next) {
   try {
     const studentId = req.user.id;
 
-    const [courseStats] = await query(
+    const courseStatsResults = query(
       `SELECT
          COUNT(ce.course_id) AS enrolledCourses,
          ROUND(AVG(NULLIF(ce.gpa, 0)), 2) AS currentGpa
@@ -12,8 +12,9 @@ async function getMyDashboard(req, res, next) {
        WHERE ce.student_id = ?`,
       [studentId]
     );
+    const courseStats = courseStatsResults[0];
 
-    const [submissionStats] = await query(
+    const submissionStatsResults = query(
       `SELECT
          SUM(CASE WHEN status = 'Submitted' THEN 1 ELSE 0 END) AS submitted,
          COUNT(*) AS total
@@ -21,8 +22,9 @@ async function getMyDashboard(req, res, next) {
        WHERE student_id = ?`,
       [studentId]
     );
+    const submissionStats = submissionStatsResults[0];
 
-    const [attendanceStats] = await query(
+    const attendanceStatsResults = query(
       `SELECT
          SUM(CASE WHEN status = 'Present' THEN 1 ELSE 0 END) AS present,
          SUM(CASE WHEN status = 'Absent' THEN 1 ELSE 0 END) AS absent,
@@ -31,6 +33,7 @@ async function getMyDashboard(req, res, next) {
        WHERE student_id = ?`,
       [studentId]
     );
+    const attendanceStats = attendanceStatsResults[0];
 
     const attendanceRate = attendanceStats.total
       ? Math.round((attendanceStats.present / attendanceStats.total) * 100)
@@ -55,11 +58,11 @@ async function getMyDashboard(req, res, next) {
   }
 }
 
-async function getMyCourses(req, res, next) {
+function getMyCourses(req, res, next) {
   try {
     const studentId = req.user.id;
 
-    const rows = await query(
+    const rows = query(
       `SELECT
          c.id,
          c.code,
@@ -82,9 +85,9 @@ async function getMyCourses(req, res, next) {
   }
 }
 
-async function listStudents(req, res, next) {
+function listStudents(req, res, next) {
   try {
-    const rows = await query(
+    const rows = query(
       `SELECT
          u.id,
          u.name,

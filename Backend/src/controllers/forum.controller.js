@@ -6,9 +6,9 @@ const createForumPostValidation = [
   body('message').trim().notEmpty().withMessage('Message is required.')
 ];
 
-async function listForumPosts(_req, res, next) {
+function listForumPosts(_req, res, next) {
   try {
-    const rows = await query(
+    const rows = query(
       `SELECT
          f.id,
          f.topic,
@@ -27,16 +27,16 @@ async function listForumPosts(_req, res, next) {
   }
 }
 
-async function createForumPost(req, res, next) {
+function createForumPost(req, res, next) {
   try {
     const { topic, message } = req.body;
-    const result = await query(
+    const result = query(
       `INSERT INTO forum_posts (topic, message, author_id)
        VALUES (?, ?, ?)`,
       [topic, message, req.user.id]
     );
 
-    const [row] = await query(
+    const rowResults = query(
       `SELECT
          f.id,
          f.topic,
@@ -47,8 +47,9 @@ async function createForumPost(req, res, next) {
        FROM forum_posts f
        JOIN users u ON u.id = f.author_id
        WHERE f.id = ? LIMIT 1`,
-      [result.insertId]
+      [result[0].insertId]
     );
+    const row = rowResults[0];
 
     return res.status(201).json(row);
   } catch (error) {

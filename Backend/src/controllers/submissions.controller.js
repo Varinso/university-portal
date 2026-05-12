@@ -13,10 +13,10 @@ const updateSubmissionValidation = [
   body('gpa').optional().isFloat({ min: 0, max: 4 }).withMessage('GPA must be between 0 and 4.')
 ];
 
-async function listSubmissions(req, res, next) {
+function listSubmissions(req, res, next) {
   try {
     if (req.user.role === 'Student') {
-      const rows = await query(
+      const rows = query(
         `SELECT
            s.id,
            a.title AS assignment,
@@ -36,7 +36,7 @@ async function listSubmissions(req, res, next) {
       return res.json(rows);
     }
 
-    const rows = await query(
+    const rows = query(
       `SELECT
          s.id,
          u.name AS studentName,
@@ -60,78 +60,71 @@ async function listSubmissions(req, res, next) {
   }
 }
 
-async function createSubmission(req, res, next) {
+function createSubmission(req, res, next) {
   try {
     const studentId = req.user.id;
     const { assignmentId, comment } = req.body;
 
-    const assignment = await query('SELECT id FROM assignments WHERE id = ? LIMIT 1', [assignmentId]);
+    const assignment = query('SELECT id FROM assignments WHERE id = ? LIMIT 1', [assignmentId]);
     if (!assignment.length) {
       return res.status(404).json({ message: 'Assignment not found.' });
     }
 
-    const existing = await query(
+    const existing = query(
       'SELECT id FROM submissions WHERE assignment_id = ? AND student_id = ? LIMIT 1',
       [assignmentId, studentId]
     );
 
     if (existing.length) {
-      await query(
+      query(
         `UPDATE submissions
-         SET status = 'Submitted', comment = ?, submitted_at = NOW()
+         SET status = 'Submitted', comment = ?, submitted_at = datetime('now')
          WHERE id = ?`,
         [comment || '', existing[0].id]
       );
 
-      const [row] = await query('SELECT * FROM submissions WHERE id = ? LIMIT 1', [existing[0].id]);
+      const rowResults = query('SELECT * FROM submissions WHERE id = ? LIMIT 1', [existing[0].id]);
+      const row = rowResults[0];
       return res.json(row);
     }
 
-    const result = await query(
+    const result = query(
       `INSERT INTO submissions (assignment_id, student_id, status, comment, feedback, gpa, submitted_at)
-       VALUES (?, ?, 'Submitted', ?, 'Pending review', 0, NOW())`,
+       VALUES (?, ?, 'Submitted', ?, 'Pending review', 0, datetime('now'))`,
       [assignmentId, studentId, comment || '']
     );
 
-    const [row] = await query('SELECT * FROM submissions WHERE id = ? LIMIT 1', [result.insertId]);
+    const rowResults = query('SELECT * FROM submissions WHERE id = ? LIMIT 1', [result[0].insertId]);
+    const row = rowResults[0];
     return res.status(201).json(row);
   } catch (error) {
     return next(error);
   }
 }
 
-async function updateSubmission(req, res, next) {
+function updateSubmission(req, res, next) {
   try {
     const submissionId = Number(req.params.id);
     const { status, feedback, gpa } = req.body;
 
-    const existing = await query('SELECT * FROM submissions WHERE id = ? LIMIT 1', [submissionId]);
+    const existing = query('SELECT * FROM submissions WHERE id = ? LIMIT 1', [submissionId]);
     if (!existing.length) {
       return res.status(404).json({ message: 'Submission not found.' });
     }
 
-    await query(
+    query(
       `UPDATE submissions
        SET status = COALESCE(?, status),
            feedback = COALESCE(?, feedback),
            gpa = COALESCE(?, gpa),
-           graded_at = NOW(),
+           graded_at = datetime('now'),
            graded_by = ?
        WHERE id = ?`,
       [status || null, feedback || null, gpa ?? null, req.user.id, submissionId]
     );
 
-    const [updated] = await query('SELECT * FROM submissions WHERE id = ? LIMIT 1', [submissionId]);
-
-    if (typeof gpa !== 'undefined') {
-      await query(
-        `UPDATE course_enrollments ce
-         JOIN assignments a ON a.id = ?
-         SET ce.gpa = ?
-         WHERE ce.student_id = ? AND ce.course_id = a.course_id`,
-        [updated.assignment_id, gpa, updated.student_id]
-      );
-    }
+    const updatedResults = query('SELECT * FROM submissions WHERE id = ? LIMIT 1', [submissionId]);
+    const updated = updatedResults[0];
 
     return res.json(updated);
   } catch (error) {

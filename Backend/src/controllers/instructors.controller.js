@@ -1,34 +1,38 @@
 const { query } = require('../config/db');
 
-async function getInstructorDashboard(req, res, next) {
+function getInstructorDashboard(req, res, next) {
   try {
     const instructorId = req.user.id;
 
-    const [students] = await query(
+    const studentsResults = query(
       `SELECT COUNT(*) AS totalStudents
        FROM users
        WHERE role = 'Student'`
     );
+    const students = studentsResults[0];
 
-    const [courses] = await query(
+    const coursesResults = query(
       `SELECT COUNT(*) AS myCourses
        FROM courses
        WHERE instructor_id = ?`,
       [instructorId]
     );
+    const courses = coursesResults[0];
 
-    const [pending] = await query(
+    const pendingResults = query(
       `SELECT COUNT(*) AS pendingSubmissions
        FROM submissions
        WHERE status IN ('Submitted', 'Pending Review')`
     );
+    const pending = pendingResults[0];
 
-    const [announcements] = await query(
+    const announcementsResults = query(
       `SELECT COUNT(*) AS announcements
        FROM announcements
        WHERE created_by = ?`,
       [instructorId]
     );
+    const announcements = announcementsResults[0];
 
     return res.json({
       totalStudents: Number(students.totalStudents || 0),

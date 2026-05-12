@@ -9,11 +9,11 @@ const saveAttendanceValidation = [
   body('records.*.status').isIn(['Present', 'Absent']).withMessage('records.status must be Present or Absent.')
 ];
 
-async function getMyAttendance(req, res, next) {
+function getMyAttendance(req, res, next) {
   try {
     const studentId = req.user.id;
 
-    const rows = await query(
+    const rows = query(
       `SELECT
          c.code AS courseCode,
          c.title AS courseTitle,
@@ -59,9 +59,9 @@ async function getMyAttendance(req, res, next) {
   }
 }
 
-async function listAttendanceForInstructor(_req, res, next) {
+function listAttendanceForInstructor(_req, res, next) {
   try {
-    const rows = await query(
+    const rows = query(
       `SELECT
          u.id AS studentId,
          u.name,
@@ -81,15 +81,14 @@ async function listAttendanceForInstructor(_req, res, next) {
   }
 }
 
-async function saveAttendance(req, res, next) {
+function saveAttendance(req, res, next) {
   try {
     const { courseId, date, records } = req.body;
 
     for (const item of records) {
-      await query(
-        `INSERT INTO attendance_records (course_id, student_id, attendance_date, status, marked_by)
-         VALUES (?, ?, ?, ?, ?)
-         ON DUPLICATE KEY UPDATE status = VALUES(status), marked_by = VALUES(marked_by)`,
+      query(
+        `INSERT OR REPLACE INTO attendance_records (course_id, student_id, attendance_date, status, marked_by)
+         VALUES (?, ?, ?, ?, ?)`,
         [courseId, item.studentId, date, item.status, req.user.id]
       );
     }

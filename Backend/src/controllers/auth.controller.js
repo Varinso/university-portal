@@ -18,11 +18,11 @@ const loginValidation = [
   body('role').optional().isIn(['Student', 'Instructor']).withMessage('Role must be Student or Instructor.')
 ];
 
-async function register(req, res, next) {
+function register(req, res, next) {
   try {
     const { name, email, id, role, password, department } = req.body;
 
-    const existing = await query(
+    const existing = query(
       'SELECT id FROM users WHERE email = ? OR user_code = ? LIMIT 1',
       [email.toLowerCase(), id]
     );
@@ -31,25 +31,27 @@ async function register(req, res, next) {
       return res.status(409).json({ message: 'Email or ID already registered.' });
     }
 
-    const passwordHash = await bcrypt.hash(password, 10);
+    const passwordHash = bcrypt.hashSync(password, 10);
 
-    const result = await query(
+    const result = query(
       `INSERT INTO users (name, email, user_code, role, password_hash)
        VALUES (?, ?, ?, ?, ?)`,
       [name, email.toLowerCase(), id, role, passwordHash]
     );
 
+    const insertId = result[0].insertId;
+
     if (role === 'Student') {
-      await query(
+      query(
         'INSERT INTO student_profiles (user_id, department) VALUES (?, ?)',
-        [result.insertId, department || 'General']
+        [insertId, department || 'General']
       );
     }
 
-    const [user] = await query(
+    const user = query(
       'SELECT id, name, email, user_code, role FROM users WHERE id = ? LIMIT 1',
-      [result.insertId]
-    );
+      [insertId]
+    )[0];
 
     const token = signToken(user);
     return res.status(201).json({ token, user });
@@ -58,7 +60,7 @@ async function register(req, res, next) {
   }
 }
 
-async function login(req, res, next) {
+function login(req, res, next) {
   try {
     const { identifier, password, role } = req.body;
 
@@ -74,12 +76,13 @@ async function login(req, res, next) {
 
     sql += ' LIMIT 1';
 
-    const [user] = await query(sql, params);
-    if (!user) {
+    const users = query(sql, params);
+    if (!users.length) {
       return res.status(401).json({ message: 'Invalid credentials.' });
     }
 
-    const ok = await bcrypt.compare(password, user.password_hash);
+    const user = users[0];
+    const ok = bcrypt.compareSync(password, user.password_hash);
     if (!ok) {
       return res.status(401).json({ message: 'Invalid credentials.' });
     }

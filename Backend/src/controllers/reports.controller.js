@@ -5,23 +5,24 @@ const reportValidation = [
   param('studentId').isInt({ min: 1 }).withMessage('studentId must be a valid number.')
 ];
 
-async function getStudentReport(req, res, next) {
+function getStudentReport(req, res, next) {
   try {
     const studentId = Number(req.params.studentId);
 
-    const [student] = await query(
+    const studentResults = query(
       `SELECT u.id, u.name, u.user_code AS studentCode, COALESCE(sp.department, 'General') AS department
        FROM users u
        LEFT JOIN student_profiles sp ON sp.user_id = u.id
        WHERE u.id = ? AND u.role = 'Student' LIMIT 1`,
       [studentId]
     );
+    const student = studentResults[0];
 
     if (!student) {
       return res.status(404).json({ message: 'Student not found.' });
     }
 
-    const [gpaStats] = await query(
+    const gpaStatsResults = query(
       `SELECT
          ROUND(AVG(NULLIF(ce.gpa, 0)), 2) AS averageGpa,
          ROUND(SUM(c.credit), 2) AS totalCredits
@@ -30,8 +31,9 @@ async function getStudentReport(req, res, next) {
        WHERE ce.student_id = ?`,
       [studentId]
     );
+    const gpaStats = gpaStatsResults[0];
 
-    const [attendance] = await query(
+    const attendanceResults = query(
       `SELECT
          SUM(CASE WHEN status = 'Present' THEN 1 ELSE 0 END) AS present,
          COUNT(*) AS total
@@ -39,8 +41,9 @@ async function getStudentReport(req, res, next) {
        WHERE student_id = ?`,
       [studentId]
     );
+    const attendance = attendanceResults[0];
 
-    const [submission] = await query(
+    const submissionResults = query(
       `SELECT
          SUM(CASE WHEN status = 'Submitted' THEN 1 ELSE 0 END) AS submitted,
          COUNT(*) AS total
@@ -48,8 +51,9 @@ async function getStudentReport(req, res, next) {
        WHERE student_id = ?`,
       [studentId]
     );
+    const submission = submissionResults[0];
 
-    const assignmentRows = await query(
+    const assignmentRows = query(
       `SELECT
          a.title AS assignment,
          c.code AS courseCode,

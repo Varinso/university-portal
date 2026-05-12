@@ -7,26 +7,27 @@ const createAssignmentValidation = [
   body('description').trim().notEmpty().withMessage('Description is required.')
 ];
 
-async function resolveCourseId(input) {
+function resolveCourseId(input) {
   if (input.courseId) return Number(input.courseId);
 
   if (input.courseCode) {
-    const [row] = await query('SELECT id FROM courses WHERE code = ? LIMIT 1', [input.courseCode]);
-    if (row) return row.id;
+    const rows = query('SELECT id FROM courses WHERE code = ? LIMIT 1', [input.courseCode]);
+    if (rows.length) return rows[0].id;
   }
 
   if (input.course) {
-    const [row] = await query('SELECT id FROM courses WHERE title = ? LIMIT 1', [input.course]);
-    if (row) return row.id;
+    const rows = query('SELECT id FROM courses WHERE title = ? LIMIT 1', [input.course]);
+    if (rows.length) return rows[0].id;
   }
 
   return null;
 }
 
-async function listAssignments(req, res, next) {
+function listAssignments(req, res, next) {
   try {
+    let rows;
     if (req.user.role === 'Student') {
-      const rows = await query(
+      rows = query(
         `SELECT a.id, a.title, c.title AS course, c.code AS courseCode, a.deadline, a.description
          FROM assignments a
          JOIN courses c ON c.id = a.course_id
@@ -35,43 +36,43 @@ async function listAssignments(req, res, next) {
          ORDER BY a.deadline ASC`,
         [req.user.id]
       );
-      return res.json(rows);
+    } else {
+      rows = query(
+        `SELECT a.id, a.title, c.title AS course, c.code AS courseCode, a.deadline, a.description
+         FROM assignments a
+         JOIN courses c ON c.id = a.course_id
+         ORDER BY a.created_at DESC`
+      );
     }
-
-    const rows = await query(
-      `SELECT a.id, a.title, c.title AS course, c.code AS courseCode, a.deadline, a.description
-       FROM assignments a
-       JOIN courses c ON c.id = a.course_id
-       ORDER BY a.created_at DESC`
-    );
     return res.json(rows);
   } catch (error) {
     return next(error);
   }
 }
 
-async function createAssignment(req, res, next) {
+function createAssignment(req, res, next) {
   try {
-    const courseId = await resolveCourseId(req.body);
+    const courseId = resolveCourseId(req.body);
     if (!courseId) {
       return res.status(400).json({ message: 'Valid course is required (courseId, courseCode, or course title).' });
     }
 
     const { title, deadline, description } = req.body;
 
-    const result = await query(
+    const result = query(
       `INSERT INTO assignments (title, course_id, deadline, description, created_by)
        VALUES (?, ?, ?, ?, ?)`,
       [title, courseId, deadline, description, req.user.id]
     );
 
-    const [assignment] = await query(
+    const insertId = result[0].insertId;
+    const assignment = query(
       `SELECT a.id, a.title, c.title AS course, c.code AS courseCode, a.deadline, a.description
        FROM assignments a
        JOIN courses c ON c.id = a.course_id
        WHERE a.id = ? LIMIT 1`,
-      [result.insertId]
-    );
+      [insertId]
+    )[0];
 
     return res.status(201).json(assignment);
   } catch (error) {
