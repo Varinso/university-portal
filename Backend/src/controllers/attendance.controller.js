@@ -9,11 +9,11 @@ const saveAttendanceValidation = [
   body('records.*.status').isIn(['Present', 'Absent']).withMessage('records.status must be Present or Absent.')
 ];
 
-function getMyAttendance(req, res, next) {
+async function getMyAttendance(req, res, next) {
   try {
     const studentId = req.user.id;
 
-    const rows = query(
+    const rows = await query(
       `SELECT
          c.code AS courseCode,
          c.title AS courseTitle,
@@ -59,9 +59,9 @@ function getMyAttendance(req, res, next) {
   }
 }
 
-function listAttendanceForInstructor(_req, res, next) {
+async function listAttendanceForInstructor(_req, res, next) {
   try {
-    const rows = query(
+    const rows = await query(
       `SELECT
          u.id AS studentId,
          u.name,
@@ -81,12 +81,12 @@ function listAttendanceForInstructor(_req, res, next) {
   }
 }
 
-function saveAttendance(req, res, next) {
+async function saveAttendance(req, res, next) {
   try {
     const { courseId, date, records } = req.body;
 
     for (const item of records) {
-      query(
+      await query(
         `INSERT OR REPLACE INTO attendance_records (course_id, student_id, attendance_date, status, marked_by)
          VALUES (?, ?, ?, ?, ?)`,
         [courseId, item.studentId, date, item.status, req.user.id]

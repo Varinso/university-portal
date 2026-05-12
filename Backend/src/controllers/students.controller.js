@@ -1,10 +1,10 @@
 const { query } = require('../config/db');
 
-function getMyDashboard(req, res, next) {
+async function getMyDashboard(req, res, next) {
   try {
     const studentId = req.user.id;
 
-    const courseStatsResults = query(
+    const courseStatsResults = await query(
       `SELECT
          COUNT(ce.course_id) AS enrolledCourses,
          ROUND(AVG(NULLIF(ce.gpa, 0)), 2) AS currentGpa
@@ -14,7 +14,7 @@ function getMyDashboard(req, res, next) {
     );
     const courseStats = courseStatsResults[0];
 
-    const submissionStatsResults = query(
+    const submissionStatsResults = await query(
       `SELECT
          SUM(CASE WHEN status = 'Submitted' THEN 1 ELSE 0 END) AS submitted,
          COUNT(*) AS total
@@ -24,7 +24,7 @@ function getMyDashboard(req, res, next) {
     );
     const submissionStats = submissionStatsResults[0];
 
-    const attendanceStatsResults = query(
+    const attendanceStatsResults = await query(
       `SELECT
          SUM(CASE WHEN status = 'Present' THEN 1 ELSE 0 END) AS present,
          SUM(CASE WHEN status = 'Absent' THEN 1 ELSE 0 END) AS absent,
@@ -58,11 +58,11 @@ function getMyDashboard(req, res, next) {
   }
 }
 
-function getMyCourses(req, res, next) {
+async function getMyCourses(req, res, next) {
   try {
     const studentId = req.user.id;
 
-    const rows = query(
+    const rows = await query(
       `SELECT
          c.id,
          c.code,
@@ -85,9 +85,9 @@ function getMyCourses(req, res, next) {
   }
 }
 
-function listStudents(req, res, next) {
+async function listStudents(req, res, next) {
   try {
-    const rows = query(
+    const rows = await query(
       `SELECT
          u.id,
          u.name,

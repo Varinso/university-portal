@@ -1,6 +1,6 @@
 const fs = require('fs');
 const path = require('path');
-const { db, query } = require('../src/config/db');
+const { query, close, client } = require('../src/config/db');
 
 function splitSqlStatements(sql) {
   return sql
@@ -9,8 +9,18 @@ function splitSqlStatements(sql) {
     .filter(Boolean);
 }
 
-function runMigrations() {
-  const migrationDir = path.join(__dirname, '..', 'db', 'migrations');
+async function runMigrations() {
+  // Choose migrations folder according to DB client
+  const migrationDir = client === 'mysql'
+    ? path.join(__dirname, '..', 'db', 'migrations', 'mysql')
+    : path.join(__dirname, '..', 'db', 'migrations');
+
+  if (!fs.existsSync(migrationDir)) {
+    console.error('Migrations directory not found for client:', client, migrationDir);
+    process.exitCode = 1;
+    return;
+  }
+
   const files = fs.readdirSync(migrationDir).filter((name) => name.endsWith('.sql')).sort();
 
   try {
@@ -19,7 +29,8 @@ function runMigrations() {
       const statements = splitSqlStatements(sql);
 
       for (const statement of statements) {
-        query(statement);
+        // await works for both async (mysql) and sync (sqlite) query implementations
+        await query(statement);
       }
 
       console.log(`Applied migration: ${file}`);
@@ -30,7 +41,7 @@ function runMigrations() {
     console.error('Migration error:', error);
     process.exitCode = 1;
   } finally {
-    db.close();
+    try { await close(); } catch (_e) {}
   }
 }
 

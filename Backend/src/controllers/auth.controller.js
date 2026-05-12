@@ -18,11 +18,11 @@ const loginValidation = [
   body('role').optional().isIn(['Student', 'Instructor']).withMessage('Role must be Student or Instructor.')
 ];
 
-function register(req, res, next) {
+async function register(req, res, next) {
   try {
     const { name, email, id, role, password, department } = req.body;
 
-    const existing = query(
+    const existing = await query(
       'SELECT id FROM users WHERE email = ? OR user_code = ? LIMIT 1',
       [email.toLowerCase(), id]
     );
@@ -33,7 +33,7 @@ function register(req, res, next) {
 
     const passwordHash = bcrypt.hashSync(password, 10);
 
-    const result = query(
+    const result = await query(
       `INSERT INTO users (name, email, user_code, role, password_hash)
        VALUES (?, ?, ?, ?, ?)`,
       [name, email.toLowerCase(), id, role, passwordHash]
@@ -42,16 +42,17 @@ function register(req, res, next) {
     const insertId = result[0].insertId;
 
     if (role === 'Student') {
-      query(
+      await query(
         'INSERT INTO student_profiles (user_id, department) VALUES (?, ?)',
         [insertId, department || 'General']
       );
     }
 
-    const user = query(
+    const userRows = await query(
       'SELECT id, name, email, user_code, role FROM users WHERE id = ? LIMIT 1',
       [insertId]
-    )[0];
+    );
+    const user = userRows[0];
 
     const token = signToken(user);
     return res.status(201).json({ token, user });
@@ -60,7 +61,7 @@ function register(req, res, next) {
   }
 }
 
-function login(req, res, next) {
+async function login(req, res, next) {
   try {
     const { identifier, password, role } = req.body;
 
@@ -76,7 +77,7 @@ function login(req, res, next) {
 
     sql += ' LIMIT 1';
 
-    const users = query(sql, params);
+    const users = await query(sql, params);
     if (!users.length) {
       return res.status(401).json({ message: 'Invalid credentials.' });
     }

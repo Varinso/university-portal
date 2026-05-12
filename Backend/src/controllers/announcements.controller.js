@@ -7,9 +7,9 @@ const createAnnouncementValidation = [
   body('audience').optional().isString().withMessage('Audience must be text.')
 ];
 
-function listAnnouncements(_req, res, next) {
+async function listAnnouncements(_req, res, next) {
   try {
-    const rows = query(
+    const rows = await query(
       `SELECT
          a.id,
          a.title,
@@ -29,16 +29,16 @@ function listAnnouncements(_req, res, next) {
   }
 }
 
-function createAnnouncement(req, res, next) {
+async function createAnnouncement(req, res, next) {
   try {
     const { title, message, audience } = req.body;
-    const result = query(
+    const result = await query(
       `INSERT INTO announcements (title, message, audience, created_by)
        VALUES (?, ?, ?, ?)`,
       [title, message, audience || 'All Students', req.user.id]
     );
 
-    const rowResults = query('SELECT * FROM announcements WHERE id = ? LIMIT 1', [result[0].insertId]);
+    const rowResults = await query('SELECT * FROM announcements WHERE id = ? LIMIT 1', [result[0].insertId]);
     const row = rowResults[0];
     return res.status(201).json(row);
   } catch (error) {

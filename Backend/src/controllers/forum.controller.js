@@ -6,9 +6,9 @@ const createForumPostValidation = [
   body('message').trim().notEmpty().withMessage('Message is required.')
 ];
 
-function listForumPosts(_req, res, next) {
+async function listForumPosts(_req, res, next) {
   try {
-    const rows = query(
+    const rows = await query(
       `SELECT
          f.id,
          f.topic,
@@ -27,16 +27,16 @@ function listForumPosts(_req, res, next) {
   }
 }
 
-function createForumPost(req, res, next) {
+async function createForumPost(req, res, next) {
   try {
     const { topic, message } = req.body;
-    const result = query(
+    const result = await query(
       `INSERT INTO forum_posts (topic, message, author_id)
        VALUES (?, ?, ?)`,
       [topic, message, req.user.id]
     );
 
-    const rowResults = query(
+    const rowResults = await query(
       `SELECT
          f.id,
          f.topic,
